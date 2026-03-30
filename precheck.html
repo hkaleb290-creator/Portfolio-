@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Access Check — Kaleb Harris Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #121012;
+      --ink: #f1e9e6;
+      --accent: #7a1f1f;
+      --muted: #b7a7a2;
+      --card: #1a1516;
+      --border: #3a2f2f;
+      --tag-bg: #241d1e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(122,31,31,0.18), transparent 42%),
+        radial-gradient(circle at 80% 10%, rgba(80,0,0,0.18), transparent 38%),
+        var(--bg);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .panel {
+      width: min(560px, 100%);
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 1.2rem;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.45rem, 3.2vw, 2rem);
+      line-height: 1.1;
+      margin-bottom: 0.55rem;
+    }
+
+    .sub {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 0.95rem;
+    }
+
+    .board {
+      position: relative;
+      border: 1px solid var(--border);
+      background: var(--tag-bg);
+      height: 210px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .target {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border: 1px solid var(--accent);
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.08s ease;
+    }
+
+    .target:active { transform: scale(0.94); }
+    .target:hover { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .progress, .status {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .progress { color: var(--muted); }
+    .status { color: var(--accent); }
+
+  </style>
+</head>
+<body>
+  <main class="panel">
+    <p class="eyebrow">Access Check</p>
+    <h1>Quick Reflex Challenge</h1>
+    <p class="sub">Hit the moving target 5 times to unlock the portfolio.</p>
+
+    <div class="board" id="board">
+      <button type="button" class="target" id="target" aria-label="Moving unlock target">Tap</button>
+    </div>
+
+    <div class="meta">
+      <p class="progress" id="progress">Hits: 0 / 5</p>
+      <p class="status" id="status">In progress</p>
+    </div>
+  </main>
+
+  <script>
+    const requiredHits = 5;
+    let hits = 0;
+
+    const board = document.getElementById('board');
+    const target = document.getElementById('target');
+    const progress = document.getElementById('progress');
+    const status = document.getElementById('status');
+
+    const params = new URLSearchParams(window.location.search);
+    const nextParam = params.get('next');
+    const next = nextParam ? decodeURIComponent(nextParam) : 'index.html';
+
+    function placeTarget() {
+      const size = 50;
+      const pad = 8;
+      const maxLeft = Math.max(pad, board.clientWidth - size - pad);
+      const maxTop = Math.max(pad, board.clientHeight - size - pad);
+      const left = Math.floor(Math.random() * (maxLeft - pad + 1)) + pad;
+      const top = Math.floor(Math.random() * (maxTop - pad + 1)) + pad;
+      target.style.left = `${left}px`;
+      target.style.top = `${top}px`;
+    }
+
+    function goToPortfolio() {
+      sessionStorage.setItem('kh_portfolio_unlocked', '1');
+      window.location.replace(next || 'index.html');
+    }
+
+    target.addEventListener('click', () => {
+      hits += 1;
+      progress.textContent = `Hits: ${hits} / ${requiredHits}`;
+      if (hits >= requiredHits) {
+        status.textContent = 'Access granted';
+        setTimeout(goToPortfolio, 220);
+        return;
+      }
+      placeTarget();
+    });
+
+    window.addEventListener('resize', placeTarget);
+
+    placeTarget();
+  </script>
+</body>
+</html>

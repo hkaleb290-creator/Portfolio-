@@ -908,6 +908,11 @@
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <script>
+    if (sessionStorage.getItem('kh_portfolio_unlocked') !== '1') {
+      const nextUrl = encodeURIComponent(location.pathname + location.search + location.hash);
+      window.location.replace(`precheck.html?next=${nextUrl}`);
+    }
+
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
     const revObs = new IntersectionObserver(entries => {
