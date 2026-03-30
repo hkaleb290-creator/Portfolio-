@@ -238,6 +238,15 @@
     .model-body { padding: 1rem; overflow: auto; }
     .model-viewer { width: 100%; height: 420px; border: 1px solid var(--border); background: var(--tag-bg); margin-bottom: 0.65rem; position: relative; }
     .model-viewer canvas { width: 100%; height: 100%; display: block; }
+    .plane-modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.75); align-items: center; justify-content: center; padding: 1.5rem; }
+    .plane-modal.open { display: flex; }
+    .plane-box { width: min(760px, 96vw); max-height: min(86vh, 900px); background: var(--bg); border: 1px solid var(--border); display: grid; grid-template-rows: auto 1fr; }
+    .plane-head { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+    .plane-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .plane-body { padding: 1rem; overflow: auto; }
+    .plane-viewer { width: 100%; height: 420px; border: 1px solid var(--border); background: var(--tag-bg); margin-bottom: 0.65rem; position: relative; }
+    .plane-viewer canvas { width: 100%; height: 100%; display: block; }
+    .plane-viewer-note { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
     .model-viewer-note { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
 
     /* TIMELINE */
@@ -528,7 +537,7 @@
         <div class="project-tags"><span class="tag">Python</span><span class="tag">Autonomous</span><span class="tag">Robotics</span><span class="tag">Sensor Fusion</span><span class="tag">SolidWorks</span></div>
       </div>
 
-      <div class="project-card reveal">
+      <div class="project-card reveal" style="cursor:pointer;" onclick="openPlaneModels(event)">
         <span class="project-num">02 · Sep 2025 – Mar 2026</span>
         <div class="project-header"><h2 class="project-title">Fixed-Wing Environmental UAV</h2><span class="project-status active">Active</span></div>
         <p class="project-org">NLC STEM Club · Northeast Lakeview College</p>
@@ -536,6 +545,7 @@
           <a class="project-proof" href="aerospace_report (3).pdf" target="_blank" data-track="proof_uav_report">Report</a>
           <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Fixed-Wing%20UAV" data-track="proof_uav_demo">Request Demo</a>
           <a class="project-proof" href="#gallery" data-track="proof_uav_photos">Photos</a>
+          <a class="project-proof" href="#" onclick="openPlaneModels(event); return false;">3D Model</a>
         </div>
         <ul class="project-bullets">
           <li><strong>Role:</strong> Lead researcher and co-director for a 4-team build.</li>
@@ -858,6 +868,23 @@
         </div>
       </div>
       <iframe class="resume-frame" src="Kaleb_Harris_Resume_Master.pdf" title="Resume Preview"></iframe>
+    </div>
+  </div>
+
+  <div class="plane-modal" id="plane-modal" onclick="closeModalBg_Plane(event)">
+    <div class="plane-box">
+      <div class="plane-head">
+        <p class="plane-title">Fixed-Wing UAV 3D Model</p>
+        <div class="resume-actions">
+          <button class="btn-preview" onclick="closeModelPlane()">Close</button>
+        </div>
+      </div>
+      <div class="plane-body">
+        <div id="plane-model-viewer" class="plane-viewer">
+          <canvas id="plane-model-canvas" aria-label="Procedural 3D plane model"></canvas>
+        </div>
+        <p id="plane-model-status" class="plane-viewer-note">Drag to rotate · Scroll to zoom · Procedural airframe assembly</p>
+      </div>
     </div>
   </div>
 
@@ -1448,6 +1475,223 @@
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeModelModal();
+    });
+
+    // Plane 3D viewer
+    const planeModal = document.getElementById('plane-modal');
+    let planeViewerInitialized = false;
+    let planeCanvas = null;
+    let planeCtx = null;
+    let planeFrame = null;
+    let planeYaw = -0.75;
+    let planePitch = 0.35;
+    let planeZoom = 680;
+    let planeLastTs = 0;
+    let planeAutoRotate = true;
+    let planeDragging = false;
+    let planeLastX = 0;
+    let planeLastY = 0;
+    let planeFaces = [];
+
+    function resizePlaneViewer() {
+      if (!planeCanvas) return;
+      const host = document.getElementById('plane-model-viewer');
+      if (!host) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.max(1, host.clientWidth);
+      const h = Math.max(1, host.clientHeight);
+      planeCanvas.width = Math.round(w * dpr);
+      planeCanvas.height = Math.round(h * dpr);
+      planeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function buildProceduralPlane() {
+      const faces = [];
+      const fuseColor = '#d4d8dd';
+      const wingColor = '#e8ecf1';
+      const tailColor = '#c5cbcf';
+      const skyblue = '#a8d8ff';
+
+      // Main fuselage cylinder
+      for (let i = 0; i < 12; i++) {
+        const a0 = (i / 12) * Math.PI * 2;
+        const a1 = ((i + 1) / 12) * Math.PI * 2;
+        const x0 = -2.0 + Math.cos(a0) * 0.15;
+        const z0 = Math.sin(a0) * 0.15;
+        const x1 = -2.0 + Math.cos(a1) * 0.15;
+        const z1 = Math.sin(a1) * 0.15;
+        faces.push({ points: [[0.8, x0, z0], [3.5, x1, z1], [3.5, x0 + 0.28, z0 + 0.02], [0.8, x1 + 0.28, z1 + 0.02]], color: fuseColor });
+      }
+
+      // Cockpit dome
+      faces.push(...makeCuboid(1.5, -1.85, 0, 0.6, 0.35, 0.35, skyblue));
+
+      // Main wings (port + starboard)
+      faces.push(...makeCuboid(1.8, 0, -2.4, 1.2, 0.1, 2.0, wingColor));
+      faces.push(...makeCuboid(1.8, 0, 2.4, 1.2, 0.1, 2.0, wingColor));
+
+      // Ailerons (left + right, on main wings)
+      faces.push(...makeCuboid(2.4, 0, -2.8, 0.4, 0.08, 0.35, '#b0b7c2'));
+      faces.push(...makeCuboid(2.4, 0, 2.8, 0.4, 0.08, 0.35, '#b0b7c2'));
+
+      // Horizontal tail plane (elevator)
+      faces.push(...makeCuboid(3.8, 0, -1.0, 0.6, 0.08, 0.8, tailColor));
+      faces.push(...makeCuboid(3.8, 0, 1.0, 0.6, 0.08, 0.8, tailColor));
+
+      // Elevator control surfaces
+      faces.push(...makeCuboid(4.1, 0, -1.3, 0.25, 0.06, 0.25, '#9ea6b1'));
+      faces.push(...makeCuboid(4.1, 0, 1.3, 0.25, 0.06, 0.25, '#9ea6b1'));
+
+      // Vertical stabilizer (rudder base)
+      faces.push(...makeCuboid(3.8, -0.5, 0, 0.6, 0.8, 0.1, tailColor));
+
+      // Rudder
+      faces.push(...makeCuboid(4.0, -1.0, 0, 0.25, 0.5, 0.08, '#8f96a3'));
+
+      // Motor/propeller nacelle
+      faces.push(...makeCuboid(0.2, -1.9, 0, 0.5, 0.25, 0.25, '#4a515c'));
+
+      // Propeller (simple dual blades)
+      faces.push(...makeCuboid(-0.15, -1.9, -0.5, 0.25, 0.08, 0.3, '#6a7178'));
+      faces.push(...makeCuboid(-0.15, -1.9, 0.5, 0.25, 0.08, 0.3, '#6a7178'));
+
+      // Landing gear struts
+      faces.push(...makeCuboid(1.2, -1.1, -0.8, 0.08, 0.85, 0.08, '#6d7684'));
+      faces.push(...makeCuboid(1.2, -1.1, 0.8, 0.08, 0.85, 0.08, '#6d7684'));
+
+      // Wheels
+      faces.push(...makeCuboid(1.2, -1.95, -0.8, 0.15, 0.15, 0.4, '#2f333a'));
+      faces.push(...makeCuboid(1.2, -1.95, 0.8, 0.15, 0.15, 0.4, '#2f333a'));
+
+      return faces;
+    }
+
+    function drawProceduralPlane() {
+      if (!planeCanvas || !planeCtx) return;
+      const w = planeCanvas.clientWidth;
+      const h = planeCanvas.clientHeight;
+      planeCtx.clearRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2 + 8;
+      const cameraDistance = 10;
+      const lightDir = [-0.45, 0.75, 0.5];
+      const lightMag = Math.hypot(lightDir[0], lightDir[1], lightDir[2]) || 1;
+      lightDir[0] /= lightMag; lightDir[1] /= lightMag; lightDir[2] /= lightMag;
+      const projectedFaces = [];
+
+      planeFaces.forEach(face => {
+        const transformed = face.points.map(([x, y, z]) => rotatePoint(x, y, z, planeYaw, planePitch));
+        const avgZ = transformed.reduce((a, p) => a + p[2], 0) / transformed.length;
+        const p0 = transformed[0], p1 = transformed[1], p2 = transformed[2];
+        const ux = p1[0] - p0[0], uy = p1[1] - p0[1], uz = p1[2] - p0[2];
+        const vx = p2[0] - p0[0], vy = p2[1] - p0[1], vz = p2[2] - p0[2];
+        const nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+        const nMag = Math.hypot(nx, ny, nz) || 1;
+        const ndx = nx / nMag, ndy = ny / nMag, ndz = nz / nMag;
+        const light = Math.max(0.1, ndx * lightDir[0] + ndy * lightDir[1] + ndz * lightDir[2]);
+        const shade = 0.45 + light * 0.75;
+
+        const pts2d = transformed.map(([x, y, z]) => {
+          const perspective = planeZoom / (z + cameraDistance);
+          return [cx + x * perspective, cy - y * perspective];
+        });
+        projectedFaces.push({ pts2d, depth: avgZ, color: face.color, shade });
+      });
+
+      projectedFaces.sort((a, b) => a.depth - b.depth);
+
+      projectedFaces.forEach(face => {
+        planeCtx.beginPath();
+        planeCtx.moveTo(face.pts2d[0][0], face.pts2d[0][1]);
+        for (let i = 1; i < face.pts2d.length; i++) planeCtx.lineTo(face.pts2d[i][0], face.pts2d[i][1]);
+        planeCtx.closePath();
+        const color = face.color.replace('#', '');
+        const r = parseInt(color.slice(0, 2), 16);
+        const g = parseInt(color.slice(2, 4), 16);
+        const b = parseInt(color.slice(4, 6), 16);
+        const litR = Math.max(0, Math.min(255, Math.round(r * face.shade)));
+        const litG = Math.max(0, Math.min(255, Math.round(g * face.shade)));
+        const litB = Math.max(0, Math.min(255, Math.round(b * face.shade)));
+        planeCtx.fillStyle = `rgb(${litR}, ${litG}, ${litB})`;
+        planeCtx.strokeStyle = 'rgba(18,16,18,0.55)';
+        planeCtx.lineWidth = 1;
+        planeCtx.fill();
+        planeCtx.stroke();
+      });
+    }
+
+    function planeLoop(ts) {
+      const dt = planeLastTs ? (ts - planeLastTs) / 1000 : 0;
+      planeLastTs = ts;
+      if (planeAutoRotate && !planeDragging) planeYaw += dt * 0.4;
+      drawProceduralPlane();
+      planeFrame = requestAnimationFrame(planeLoop);
+    }
+
+    function initPlaneViewer() {
+      if (planeViewerInitialized) return;
+      const statusEl = document.getElementById('plane-model-status');
+      planeCanvas = document.getElementById('plane-model-canvas');
+      if (!planeCanvas) {
+        if (statusEl) statusEl.textContent = 'Plane 3D preview unavailable. Check browser support.';
+        return;
+      }
+
+      planeCtx = planeCanvas.getContext('2d');
+      if (!planeCtx) {
+        if (statusEl) statusEl.textContent = 'Canvas 3D preview unavailable in this browser.';
+        return;
+      }
+
+      planeFaces = buildProceduralPlane();
+      resizePlaneViewer();
+
+      planeCanvas.addEventListener('pointerdown', (e) => {
+        planeDragging = true;
+        planeAutoRotate = false;
+        planeLastX = e.clientX;
+        planeLastY = e.clientY;
+        planeCanvas.setPointerCapture(e.pointerId);
+      });
+      planeCanvas.addEventListener('pointermove', (e) => {
+        if (!planeDragging) return;
+        const dx = e.clientX - planeLastX;
+        const dy = e.clientY - planeLastY;
+        planeYaw += dx * 0.01;
+        planePitch = Math.max(-1.2, Math.min(1.2, planePitch + dy * 0.008));
+        planeLastX = e.clientX;
+        planeLastY = e.clientY;
+      });
+      planeCanvas.addEventListener('pointerup', () => { planeDragging = false; });
+      planeCanvas.addEventListener('pointercancel', () => { planeDragging = false; });
+      planeCanvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        planeZoom = Math.max(260, Math.min(1400, planeZoom * (e.deltaY > 0 ? 0.92 : 1.08)));
+      }, { passive: false });
+
+      planeFrame = requestAnimationFrame(planeLoop);
+      if (statusEl) statusEl.textContent = 'Drag to rotate · Scroll to zoom · Procedural airframe';
+
+      planeViewerInitialized = true;
+      window.addEventListener('resize', resizePlaneViewer);
+    }
+
+    function openPlaneModels(event) {
+      if (event && event.target && event.target.closest('a,button,summary,details')) return;
+      planeModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      initPlaneViewer();
+      resizePlaneViewer();
+    }
+    function closeModelPlane() {
+      planeModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function closeModalBg_Plane(e) { if (e.target === planeModal) closeModelPlane(); }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeModelModal(); closeModelPlane(); }
     });
   </script>
 
