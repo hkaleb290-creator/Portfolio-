@@ -83,6 +83,12 @@
     .stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; line-height: 1; letter-spacing: -0.02em; color: var(--ink); }
     .stat-num span { color: var(--accent); }
     .stat-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+    .hero-right .stats-panel .stat-row { opacity: 0; transform: translateY(8px); animation: rise 0.45s ease forwards; }
+    .hero-right .stats-panel .stat-row:nth-child(2) { animation-delay: 0.72s; }
+    .hero-right .stats-panel .stat-row:nth-child(3) { animation-delay: 0.8s; }
+    .hero-right .stats-panel .stat-row:nth-child(4) { animation-delay: 0.88s; }
+    .hero-right .stats-panel .stat-row:nth-child(5) { animation-delay: 0.96s; }
+    .hero-right .stats-panel .stat-row:nth-child(6) { animation-delay: 1.04s; }
 
     /* SECTIONS */
     .section { padding: 5.75rem 2.5rem; border-bottom: 1px solid var(--border); position: relative; }
@@ -411,6 +417,14 @@
         <div class="stat-row">
           <div class="stat-cell"><div class="stat-num">1.2<span>m</span></div><div class="stat-label">UAV Wingspan</div></div>
           <div class="stat-cell"><div class="stat-num">&lt;$500</div><div class="stat-label">UAV Build Cost</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell"><div class="stat-num">35<span>min</span></div><div class="stat-label">Est. Flight Time</div></div>
+          <div class="stat-cell"><div class="stat-num">2</div><div class="stat-label">Research Reports</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell"><div class="stat-num">90<span>+</span></div><div class="stat-label">STEM Members Grown</div></div>
+          <div class="stat-cell"><div class="stat-num">3</div><div class="stat-label">Major Initiatives</div></div>
         </div>
       </div>
     </div>
