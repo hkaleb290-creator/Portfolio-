@@ -60,7 +60,7 @@
     .hero-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; transform: translateY(12px); animation: rise 0.6s 0.2s forwards; }
     .hero-name { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem, 6.5vw, 6rem); line-height: 0.95; letter-spacing: -0.03em; color: var(--ink); opacity: 0; transform: translateY(16px); animation: rise 0.7s 0.35s forwards; }
     .hero-name em { font-style: italic; color: var(--accent); }
-    .hero-sub { max-width: 480px; margin-top: 2.5rem; color: var(--muted); font-size: 13px; line-height: 1.85; opacity: 0; transform: translateY(12px); animation: rise 0.6s 0.55s forwards; }
+    .hero-sub { max-width: 520px; margin-top: 2.35rem; color: color-mix(in srgb, var(--ink) 64%, var(--muted) 36%); font-size: 13.5px; line-height: 1.95; opacity: 0; transform: translateY(12px); animation: rise 0.6s 0.55s forwards; }
     .hero-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.75rem; opacity: 0; transform: translateY(10px); animation: rise 0.6s 0.7s forwards; }
     .hero-pill { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.8rem; border: 1px solid var(--border); color: var(--muted); background: var(--tag-bg); }
     .hero-actions { display: flex; align-items: center; gap: 0.75rem; margin-top: 2.5rem; flex-wrap: wrap; opacity: 0; animation: rise 0.6s 0.85s forwards; }
@@ -177,8 +177,15 @@
     .project-status.active { color: #500000; }
     .project-status.complete { color: var(--muted); }
     .project-org { font-size: 11px; color: var(--accent); letter-spacing: 0.06em; }
-    .project-desc { font-size: 12.5px; color: var(--muted); line-height: 1.85; flex: 1; }
+    .project-desc { font-size: 12.5px; color: var(--muted); line-height: 1.75; flex: 1; }
     .project-desc strong { color: var(--ink); font-weight: 500; }
+    .project-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; margin: 0.2rem 0 0.1rem; }
+    .project-bullets li { font-size: 12px; color: var(--muted); line-height: 1.7; display: flex; gap: 0.45rem; }
+    .project-bullets li::before { content: '•'; color: var(--accent); }
+    .case-inline { border: 1px solid var(--border); background: var(--tag-bg); }
+    .case-inline summary { cursor: pointer; list-style: none; padding: 0.55rem 0.7rem; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .case-inline summary::-webkit-details-marker { display: none; }
+    .case-inline p { border-top: 1px solid var(--border); padding: 0.65rem 0.7rem; font-size: 11.5px; color: var(--muted); line-height: 1.7; }
     .project-metrics { display: flex; gap: 1.25rem; padding: 0.95rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
     .metric { display: flex; flex-direction: column; gap: 0.1rem; }
     .metric-val { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--ink); line-height: 1; }
@@ -279,8 +286,10 @@
     @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } .hero-right { display: none; } .featured-wrap { grid-template-columns: 1fr; } }
     @media (max-width: 680px) {
       .top-cta-bar { justify-content: flex-start; overflow-x: auto; }
+      .top-cta-bar a:not(.primary) { display: none; }
       header { padding: 0.85rem 1.25rem; }
       nav, .btn-resume { display: none; }
+      .header-right .social-links, .btn-theme { display: none; }
       .hamburger { display: flex; }
       .hero, .section { padding-left: 1.25rem; padding-right: 1.25rem; }
       .hero { padding-top: 6rem; }
@@ -297,7 +306,10 @@
       .pub-item { grid-template-columns: 1fr; }
       .quote-grid { grid-template-columns: 1fr; }
       .media-strip { grid-template-columns: repeat(2, 1fr); }
-      .jump-nav { display: none; }
+      .jump-nav { display: flex; left: 0; right: 0; bottom: 0; top: auto; width: 100%; flex-direction: row; border: 0; border-top: 1px solid var(--border); overflow-x: auto; z-index: 120; background: var(--card); }
+      .jump-nav a { border-bottom: 0; border-right: 1px solid var(--border); white-space: nowrap; padding: 0.65rem 0.75rem; }
+      .jump-nav a:last-child { border-right: none; }
+      body { padding-bottom: 46px; }
       footer { padding: 1.25rem; }
     }
     @media (max-width: 480px) {
@@ -493,59 +505,83 @@
     </div>
     <div class="projects-grid">
 
-      <div class="project-card reveal" style="cursor: pointer;" onclick="showCaseStudy('dirt-rover')">
+      <div class="project-card reveal">
         <span class="project-num">01 · Jan 2026 – Present</span>
         <div class="project-header"><h2 class="project-title">DIRT Rover</h2><span class="project-status active">Active</span></div>
         <p class="project-org">TURTLE Robotics — Texas A&amp;M</p>
-        <p class="project-desc">Leading a <strong>3-person software team</strong> developing an autonomous rover integrating a deep spectroscopy probe for real-time soil quality measurement. Full ownership of architecture decisions, task delegation, and sprint planning — with cross-functional coordination across mechanical and electrical subsystems.</p>
+        <div class="project-proofs">
+          <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20DIRT%20Rover" data-track="proof_dirt_demo">Request Demo</a>
+          <a class="project-proof" href="#featured" data-track="proof_dirt_report">Case Summary</a>
+          <a class="project-proof" href="#gallery" data-track="proof_dirt_photos">Photos</a>
+          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_dirt_repo">Repo</a>
+        </div>
+        <ul class="project-bullets">
+          <li><strong>Role:</strong> Software lead for a 3-person autonomy team.</li>
+          <li><strong>Stack:</strong> Python, sensor fusion, rover navigation pipeline.</li>
+          <li><strong>Outcome:</strong> Reliable autonomous runs with live soil data capture.</li>
+        </ul>
+        <details class="case-inline">
+          <summary>Open Case Snapshot</summary>
+          <p>Built end-to-end software workflow from route planning to spectroscopy stream handling, while coordinating mechanical and electrical integrations in sprint cycles.</p>
+        </details>
         <div class="project-metrics">
           <div class="metric"><span class="metric-val">3</span><span class="metric-label">Subsystems</span></div>
           <div class="metric"><span class="metric-val">Auto</span><span class="metric-label">Navigation</span></div>
           <div class="metric"><span class="metric-val">Real-time</span><span class="metric-label">Soil Analysis</span></div>
         </div>
-        <div class="project-proofs">
-          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_dirt_repo">Repo</a>
-          <a class="project-proof" href="#featured" data-track="proof_dirt_report">Report</a>
-          <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20DIRT%20Rover" data-track="proof_dirt_demo">Request Demo</a>
-          <a class="project-proof" href="#gallery" data-track="proof_dirt_photos">Photos</a>
-        </div>
         <div class="project-tags"><span class="tag">Python</span><span class="tag">Autonomous</span><span class="tag">Robotics</span><span class="tag">Sensor Fusion</span><span class="tag">SolidWorks</span></div>
       </div>
 
-      <div class="project-card reveal" style="cursor: pointer;" onclick="showCaseStudy('uav')">
+      <div class="project-card reveal">
         <span class="project-num">02 · Sep 2025 – Mar 2026</span>
         <div class="project-header"><h2 class="project-title">Fixed-Wing Environmental UAV</h2><span class="project-status active">Active</span></div>
         <p class="project-org">NLC STEM Club · Northeast Lakeview College</p>
-        <p class="project-desc">Lead researcher and co-director of a <strong>28-week, 4-team build</strong> of a 3D-printed fixed-wing UAV (Eclipson Model T, LW-PLA, carbon fiber spars) running INAV on a Matek F405-WMN. Independent Arduino Nano payload logs BMP280 + MQ135 data to microSD every 2 seconds. Targeting <strong>San Antonio metro air quality mapping</strong>. Full research report published.</p>
+        <div class="project-proofs">
+          <a class="project-proof" href="aerospace_report (3).pdf" target="_blank" data-track="proof_uav_report">Report</a>
+          <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Fixed-Wing%20UAV" data-track="proof_uav_demo">Request Demo</a>
+          <a class="project-proof" href="#gallery" data-track="proof_uav_photos">Photos</a>
+          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_uav_repo">Repo</a>
+        </div>
+        <ul class="project-bullets">
+          <li><strong>Role:</strong> Lead researcher and co-director for a 4-team build.</li>
+          <li><strong>Stack:</strong> INAV, Arduino payload logging, 3D printed airframe.</li>
+          <li><strong>Outcome:</strong> 28-week delivery with published technical report.</li>
+        </ul>
+        <details class="case-inline">
+          <summary>Open Case Snapshot</summary>
+          <p>Integrated flight controller setup, payload telemetry logging, and fabrication workflow for air-quality mapping research across the San Antonio metro area.</p>
+        </details>
         <div class="project-metrics">
           <div class="metric"><span class="metric-val">1200mm</span><span class="metric-label">Wingspan</span></div>
           <div class="metric"><span class="metric-val">35min</span><span class="metric-label">Est. Flight Time</span></div>
           <div class="metric"><span class="metric-val">&lt;$500</span><span class="metric-label">Total Budget</span></div>
         </div>
-        <div class="project-proofs">
-          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_uav_repo">Repo</a>
-          <a class="project-proof" href="aerospace_report (3).pdf" target="_blank" data-track="proof_uav_report">Report</a>
-          <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Fixed-Wing%20UAV" data-track="proof_uav_demo">Request Demo</a>
-          <a class="project-proof" href="#gallery" data-track="proof_uav_photos">Photos</a>
-        </div>
         <div class="project-tags"><span class="tag">INAV</span><span class="tag">Arduino</span><span class="tag">LW-PLA</span><span class="tag">BMP280</span><span class="tag">MQ135</span><span class="tag">Systems Integration</span></div>
       </div>
 
-      <div class="project-card reveal" style="cursor: pointer;" onclick="showCaseStudy('shm')">
+      <div class="project-card reveal">
         <span class="project-num">03 · Oct 2025</span>
         <div class="project-header"><h2 class="project-title">Piezoelectric SHM System</h2><span class="project-status complete">Complete</span></div>
         <p class="project-org">NLC STEM Club</p>
-        <p class="project-desc">Co-developed a structural health monitoring system using piezoelectric transducers and an Arduino DAQ to detect real-time damage on Cedar and 3D-printed PLA bridge models. Identified a <strong>15-second pre-failure cascade</strong>; documented <strong>850 mV peak response</strong> in PLA vs 400 mV in wood.</p>
+        <div class="project-proofs">
+          <a class="project-proof" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank" data-track="proof_shm_report">Report</a>
+          <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Piezoelectric%20SHM" data-track="proof_shm_demo">Request Demo</a>
+          <a class="project-proof" href="#gallery" data-track="proof_shm_photos">Photos</a>
+          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_shm_repo">Repo</a>
+        </div>
+        <ul class="project-bullets">
+          <li><strong>Role:</strong> Co-developer of bridge-model structural monitoring system.</li>
+          <li><strong>Stack:</strong> Piezo sensors, Arduino DAQ, failure-signal analysis.</li>
+          <li><strong>Outcome:</strong> Captured 15-second pre-failure trend with 850 mV peak.</li>
+        </ul>
+        <details class="case-inline">
+          <summary>Open Case Snapshot</summary>
+          <p>Designed and tested instrumentation across cedar and PLA bridge models, then documented measurable pre-failure signatures and comparative signal amplitudes.</p>
+        </details>
         <div class="project-metrics">
           <div class="metric"><span class="metric-val">850mV</span><span class="metric-label">PLA Peak</span></div>
           <div class="metric"><span class="metric-val">400mV</span><span class="metric-label">Wood Peak</span></div>
           <div class="metric"><span class="metric-val">15s</span><span class="metric-label">Pre-failure</span></div>
-        </div>
-        <div class="project-proofs">
-          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_shm_repo">Repo</a>
-          <a class="project-proof" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank" data-track="proof_shm_report">Report</a>
-          <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Piezoelectric%20SHM" data-track="proof_shm_demo">Request Demo</a>
-          <a class="project-proof" href="#gallery" data-track="proof_shm_photos">Photos</a>
         </div>
         <div class="project-tags"><span class="tag">Arduino</span><span class="tag">C++</span><span class="tag">DAQ</span><span class="tag">Data Visualization</span></div>
       </div>
@@ -584,9 +620,9 @@
     </div>
   </section>
 
-  <!-- BLOG / NEWS -->
+  <!-- HIGHLIGHTS -->
   <section class="section" id="blog">
-    <p class="section-label">Recent Updates & News</p>
+    <p class="section-label">Selected Highlights</p>
     <div class="blog-grid">
       <div class="blog-card reveal">
         <p class="blog-date">March 2026</p>
@@ -939,16 +975,6 @@
         submitBtn.textContent = originalText;
       }
     });
-
-    // Case study functionality
-    function showCaseStudy(project) {
-      const cases = {
-        'dirt-rover': 'DIRT Rover - Autonomous Soil Analysis System. Leading 3-person software team through full autonomous system development with real-time sensor fusion and navigation.',
-        'uav': 'Fixed-Wing Environmental UAV - 28-week research project building a 3D-printed UAV for environmental data collection over San Antonio metro area.',
-        'shm': 'Piezoelectric Structural Health Monitoring - Real-time damage detection system that identified 15-second pre-failure cascade and achieved 850mV peak response.'
-      };
-      alert(`${cases[project]}\\n\\nClick the project card to view full details.`);
-    }
 
     // Resume preview modal
     const resumeModal = document.getElementById('resume-modal');
