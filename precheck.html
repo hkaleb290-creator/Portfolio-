@@ -33,7 +33,7 @@
     }
 
     .panel {
-      width: min(700px, 100%);
+      width: min(900px, 100%);
       border: 1px solid var(--border);
       background: var(--card);
       padding: 1.2rem;
@@ -61,6 +61,57 @@
       margin-bottom: 0.95rem;
     }
 
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--border);
+      background: var(--border);
+      margin-bottom: 0.85rem;
+    }
+
+    .hud-item {
+      background: var(--bg);
+      padding: 0.55rem 0.5rem;
+      text-align: center;
+    }
+
+    .hud-label {
+      display: block;
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .hud-val {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .hud-val.alert { color: #d57171; }
+
+    .mode-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+
+    .mode-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .mode-group { display: flex; gap: 0.45rem; }
+
     .table {
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(122,31,31,0.12), rgba(36,29,30,0.85));
@@ -71,44 +122,50 @@
     .cards {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 0.55rem;
+      gap: 0.7rem;
     }
 
     .card {
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--ink);
-      min-height: 98px;
-      padding: 0.45rem;
+      min-height: 150px;
+      padding: 0.65rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
       cursor: pointer;
-      transition: border-color 0.2s, transform 0.12s, background 0.2s;
+      transition: border-color 0.2s, transform 0.12s, background 0.2s, box-shadow 0.2s;
       position: relative;
+      transform-style: preserve-3d;
+      animation: cardFlip 0.42s ease;
     }
 
     .card:hover { border-color: var(--accent); transform: translateY(-1px); }
     .card.held { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, var(--bg)); }
     .card.locked { cursor: default; }
+    .card.win {
+      box-shadow: 0 0 0 1px var(--accent), 0 0 18px rgba(122,31,31,0.45);
+      background: color-mix(in srgb, var(--accent) 22%, var(--bg));
+    }
 
     .card-rank {
       font-family: 'DM Serif Display', serif;
-      font-size: 1.35rem;
+      font-size: 2.1rem;
       line-height: 1;
     }
 
     .card-suit {
-      font-size: 1.2rem;
+      font-size: 1.7rem;
       line-height: 1;
     }
 
     .card-hold {
       position: absolute;
-      top: 0.3rem;
-      right: 0.35rem;
-      font-size: 8px;
+      top: 0.45rem;
+      right: 0.45rem;
+      font-size: 9px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--accent);
@@ -128,7 +185,7 @@
     }
 
     .progress, .status {
-      font-size: 10px;
+      font-size: 10.5px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--muted);
@@ -162,11 +219,56 @@
     .btn:hover { color: var(--accent); border-color: var(--accent); }
     .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
     .btn.primary:hover { opacity: 0.9; }
+    .btn.active { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
+    .banner {
+      position: fixed;
+      inset: 0;
+      background: rgba(12, 8, 10, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+      padding: 1rem;
+    }
+
+    .banner.show { display: flex; }
+
+    .banner-card {
+      width: min(420px, 100%);
+      border: 1px solid var(--accent);
+      background: var(--card);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .banner-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem;
+      margin-bottom: 0.4rem;
+      color: var(--ink);
+    }
+
+    .banner-sub {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+
+    @keyframes cardFlip {
+      0% { transform: rotateY(90deg); opacity: 0.2; }
+      100% { transform: rotateY(0deg); opacity: 1; }
+    }
+
     @media (max-width: 640px) {
-      .cards { grid-template-columns: repeat(5, minmax(50px, 1fr)); }
-      .card { min-height: 86px; }
+      .hud { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .cards { grid-template-columns: repeat(5, minmax(52px, 1fr)); }
+      .card { min-height: 112px; padding: 0.45rem; }
+      .card-rank { font-size: 1.45rem; }
+      .card-suit { font-size: 1.2rem; }
       .meta { grid-template-columns: 1fr; }
       .status { text-align: left; }
     }
@@ -176,39 +278,77 @@
   <main class="panel">
     <p class="eyebrow">Access Check</p>
     <h1>Mini Poker Gate</h1>
-    <p class="sub">Deal 5 cards, hold what you want, then draw once. Score <strong>One Pair or better</strong> to unlock the portfolio.</p>
+    <p class="sub">Deal 5 cards, hold what you want, then draw once. Build chips to the target and beat hand stakes to unlock the portfolio.</p>
+
+    <section class="hud" aria-label="Poker status">
+      <article class="hud-item"><span class="hud-label">Chips</span><span class="hud-val" id="chips">0</span></article>
+      <article class="hud-item"><span class="hud-label">Target</span><span class="hud-val" id="target-score">60</span></article>
+      <article class="hud-item"><span class="hud-label">Timer</span><span class="hud-val" id="timer">25s</span></article>
+      <article class="hud-item"><span class="hud-label">Stake</span><span class="hud-val" id="stake">Pair+</span></article>
+      <article class="hud-item"><span class="hud-label">Fails</span><span class="hud-val" id="fails">0</span></article>
+    </section>
+
+    <div class="mode-row">
+      <p class="mode-label">Difficulty</p>
+      <div class="mode-group">
+        <button type="button" class="btn active" id="mode-quick">Quick Unlock</button>
+        <button type="button" class="btn" id="mode-challenge">Challenge</button>
+        <button type="button" class="btn" id="sound-btn">Sound: On</button>
+      </div>
+    </div>
 
     <div class="table">
       <div class="cards" id="cards"></div>
     </div>
 
     <div class="meta">
-      <p class="progress" id="progress">Goal: Pair or better · Click cards to hold</p>
+      <p class="progress" id="progress">Daily seed active: first hand is shared today · Click cards to hold</p>
       <p class="status" id="status">Deal a hand</p>
     </div>
 
     <div class="actions">
       <div class="btn-row">
         <button type="button" class="btn primary" id="deal-btn">Deal</button>
-        <button type="button" class="btn" id="draw-btn" disabled>Draw Held</button>
+        <button type="button" class="btn" id="draw-btn" disabled>Draw</button>
         <button type="button" class="btn" id="new-btn" disabled>New Hand</button>
       </div>
       <button type="button" class="btn" id="skip-btn">Skip Challenge</button>
     </div>
   </main>
 
+  <div class="banner" id="win-banner" aria-live="polite">
+    <div class="banner-card">
+      <p class="banner-title">Access Granted</p>
+      <p class="banner-sub">Routing to portfolio...</p>
+      <button type="button" class="btn primary" id="enter-btn">Enter Now</button>
+    </div>
+  </div>
+
   <script>
     const suits = ['♠', '♥', '♦', '♣'];
     const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
     const rankValue = { '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, J: 11, Q: 12, K: 13, A: 14 };
+    const handNames = ['High Card', 'One Pair', 'Two Pair', 'Three of a Kind', 'Straight', 'Flush', 'Full House', 'Four of a Kind', 'Straight Flush', 'Royal Flush'];
+    const chipByScore = [0, 10, 20, 30, 40, 50, 70, 100, 140, 200];
+    const timePerHand = 25;
 
     const cardsEl = document.getElementById('cards');
     const progressEl = document.getElementById('progress');
     const statusEl = document.getElementById('status');
+    const chipsEl = document.getElementById('chips');
+    const targetEl = document.getElementById('target-score');
+    const timerEl = document.getElementById('timer');
+    const stakeEl = document.getElementById('stake');
+    const failsEl = document.getElementById('fails');
     const dealBtn = document.getElementById('deal-btn');
     const drawBtn = document.getElementById('draw-btn');
     const newBtn = document.getElementById('new-btn');
     const skipBtn = document.getElementById('skip-btn');
+    const modeQuickBtn = document.getElementById('mode-quick');
+    const modeChallengeBtn = document.getElementById('mode-challenge');
+    const soundBtn = document.getElementById('sound-btn');
+    const winBanner = document.getElementById('win-banner');
+    const enterBtn = document.getElementById('enter-btn');
 
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get('next');
@@ -219,17 +359,103 @@
     let held = [false, false, false, false, false];
     let phase = 'idle';
     let unlocked = false;
+    let redirected = false;
+    let chips = 0;
+    let fails = 0;
+    let difficulty = 'quick';
+    let requiredScore = 1;
+    let stakeRoundQueued = false;
+    let boostInPlay = false;
+    let firstDailyDealt = false;
+    let handTimer = null;
+    let timeLeft = timePerHand;
+    let soundOn = true;
+    let audioCtx = null;
+
+    const targetByDifficulty = { quick: 60, challenge: 100 };
+    const baseReqByDifficulty = { quick: 1, challenge: 2 };
+
+    function getTodaySeed() {
+      const d = new Date();
+      return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
+    }
+
+    function seedHash(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function mulberry32(seed) {
+      return function() {
+        let t = seed += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function ensureAudio() {
+      if (!soundOn) return null;
+      if (!audioCtx) {
+        try {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch {
+          soundOn = false;
+          soundBtn.textContent = 'Sound: Off';
+          return null;
+        }
+      }
+      return audioCtx;
+    }
+
+    function playTone(freq, duration = 0.08, type = 'triangle', gain = 0.03) {
+      const ctx = ensureAudio();
+      if (!ctx) return;
+      const oscillator = ctx.createOscillator();
+      const volume = ctx.createGain();
+      oscillator.type = type;
+      oscillator.frequency.value = freq;
+      volume.gain.value = gain;
+      oscillator.connect(volume);
+      volume.connect(ctx.destination);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + duration);
+    }
+
+    function playDealSound() { playTone(330, 0.06, 'triangle', 0.025); }
+    function playDrawSound() { playTone(390, 0.08, 'triangle', 0.03); }
+    function playWinSound() {
+      playTone(523, 0.1, 'sine', 0.04);
+      setTimeout(() => playTone(659, 0.1, 'sine', 0.04), 80);
+      setTimeout(() => playTone(784, 0.14, 'sine', 0.05), 160);
+    }
+
+    function rankLabel(score) {
+      return handNames[Math.max(0, Math.min(9, score))];
+    }
+
+    function stakeLabel(score) {
+      if (score <= 1) return 'Pair+';
+      if (score === 2) return 'Two Pair+';
+      return `${rankLabel(score)}+`;
+    }
 
     function goToPortfolio() {
+      if (redirected) return;
+      redirected = true;
       sessionStorage.setItem('kh_portfolio_unlocked', '1');
       window.location.replace(next || 'index.html');
     }
 
-    function createDeck() {
+    function createDeck(randFn = Math.random) {
       const fresh = [];
       suits.forEach(suit => ranks.forEach(rank => fresh.push({ rank, suit })));
       for (let i = fresh.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(randFn() * (i + 1));
         [fresh[i], fresh[j]] = [fresh[j], fresh[i]];
       }
       return fresh;
@@ -244,7 +470,8 @@
       hand.forEach((card, index) => {
         const cardBtn = document.createElement('button');
         cardBtn.type = 'button';
-        cardBtn.className = `card ${held[index] ? 'held' : ''} ${(card.suit === '♥' || card.suit === '♦') ? 'red' : ''} ${phase !== 'dealt' ? 'locked' : ''}`;
+        const winningClass = card.winning ? 'win' : '';
+        cardBtn.className = `card ${held[index] ? 'held' : ''} ${(card.suit === '♥' || card.suit === '♦') ? 'red' : ''} ${phase !== 'dealt' ? 'locked' : ''} ${winningClass}`;
         cardBtn.innerHTML = `
           <span class="card-hold">Hold</span>
           <span class="card-rank">${card.rank}</span>
@@ -261,6 +488,13 @@
 
     function evaluateHand(cards) {
       const values = cards.map(card => rankValue[card.rank]).sort((a, b) => a - b);
+      const indexByValue = {};
+      cards.forEach((card, index) => {
+        const value = rankValue[card.rank];
+        if (!indexByValue[value]) indexByValue[value] = [];
+        indexByValue[value].push(index);
+      });
+
       const suitCounts = cards.reduce((acc, card) => {
         acc[card.suit] = (acc[card.suit] || 0) + 1;
         return acc;
@@ -272,6 +506,9 @@
       }, {});
 
       const counts = Object.values(valueCounts).sort((a, b) => b - a);
+      const groups = Object.entries(indexByValue)
+        .map(([value, indices]) => ({ value: Number(value), indices, count: indices.length }))
+        .sort((a, b) => b.count - a.count || b.value - a.value);
       const isFlush = Object.values(suitCounts).some(count => count === 5);
 
       let isStraight = false;
@@ -283,16 +520,95 @@
 
       const isRoyal = isStraight && isFlush && values.includes(10) && values.includes(14);
 
-      if (isRoyal) return { score: 9, label: 'Royal Flush' };
-      if (isStraight && isFlush) return { score: 8, label: 'Straight Flush' };
-      if (counts[0] === 4) return { score: 7, label: 'Four of a Kind' };
-      if (counts[0] === 3 && counts[1] === 2) return { score: 6, label: 'Full House' };
-      if (isFlush) return { score: 5, label: 'Flush' };
-      if (isStraight) return { score: 4, label: 'Straight' };
-      if (counts[0] === 3) return { score: 3, label: 'Three of a Kind' };
-      if (counts[0] === 2 && counts[1] === 2) return { score: 2, label: 'Two Pair' };
-      if (counts[0] === 2) return { score: 1, label: 'One Pair' };
-      return { score: 0, label: 'High Card' };
+      if (isRoyal) return { score: 9, label: 'Royal Flush', winningIndices: [0, 1, 2, 3, 4] };
+      if (isStraight && isFlush) return { score: 8, label: 'Straight Flush', winningIndices: [0, 1, 2, 3, 4] };
+      if (counts[0] === 4) return { score: 7, label: 'Four of a Kind', winningIndices: groups[0].indices };
+      if (counts[0] === 3 && counts[1] === 2) return { score: 6, label: 'Full House', winningIndices: [...groups[0].indices, ...groups[1].indices] };
+      if (isFlush) return { score: 5, label: 'Flush', winningIndices: [0, 1, 2, 3, 4] };
+      if (isStraight) return { score: 4, label: 'Straight', winningIndices: [0, 1, 2, 3, 4] };
+      if (counts[0] === 3) return { score: 3, label: 'Three of a Kind', winningIndices: groups[0].indices };
+      if (counts[0] === 2 && counts[1] === 2) return { score: 2, label: 'Two Pair', winningIndices: [...groups[0].indices, ...groups[1].indices] };
+      if (counts[0] === 2) return { score: 1, label: 'One Pair', winningIndices: groups[0].indices };
+      return { score: 0, label: 'High Card', winningIndices: [] };
+    }
+
+    function detectNearMiss(cards) {
+      const suitsMap = cards.reduce((acc, card) => {
+        acc[card.suit] = (acc[card.suit] || 0) + 1;
+        return acc;
+      }, {});
+      const flushNear = Object.values(suitsMap).some(count => count === 4);
+
+      const valueSet = new Set(cards.map(card => rankValue[card.rank]));
+      if (valueSet.has(14)) valueSet.add(1);
+      let straightNear = false;
+      for (let start = 1; start <= 10; start++) {
+        let count = 0;
+        for (let n = start; n < start + 5; n++) {
+          if (valueSet.has(n)) count++;
+        }
+        if (count === 4) {
+          straightNear = true;
+          break;
+        }
+      }
+
+      if (flushNear && straightNear) return 'Near miss: one off a straight and flush';
+      if (flushNear) return 'Near miss: one off a flush';
+      if (straightNear) return 'Near miss: one off a straight';
+      return '';
+    }
+
+    function updateHud() {
+      const target = targetByDifficulty[difficulty];
+      chipsEl.textContent = `${chips}`;
+      targetEl.textContent = `${target}`;
+      stakeEl.textContent = stakeLabel(requiredScore);
+      failsEl.textContent = `${fails}`;
+      timerEl.textContent = `${timeLeft}s`;
+      timerEl.classList.toggle('alert', timeLeft <= 6 && phase === 'dealt');
+    }
+
+    function stopTimer() {
+      if (handTimer) clearInterval(handTimer);
+      handTimer = null;
+    }
+
+    function startTimer() {
+      stopTimer();
+      timeLeft = timePerHand;
+      updateHud();
+      handTimer = setInterval(() => {
+        timeLeft -= 1;
+        updateHud();
+        if (timeLeft <= 0) {
+          stopTimer();
+          timeoutHand();
+        }
+      }, 1000);
+    }
+
+    function setRequiredScoreForDeal() {
+      const base = baseReqByDifficulty[difficulty];
+      if (difficulty === 'quick' && stakeRoundQueued) {
+        requiredScore = 2;
+        boostInPlay = true;
+        stakeRoundQueued = false;
+      } else {
+        requiredScore = base;
+        boostInPlay = false;
+      }
+    }
+
+    function applyFailure() {
+      if (boostInPlay) {
+        fails = 0;
+      } else {
+        fails += 1;
+        if (difficulty === 'quick' && fails >= 2) {
+          stakeRoundQueued = true;
+        }
+      }
     }
 
     function setButtons() {
@@ -306,46 +622,136 @@
       }
     }
 
+    function showWinBanner() {
+      if (unlocked) return;
+      unlocked = true;
+      playWinSound();
+      winBanner.classList.add('show');
+      statusEl.textContent = 'Access granted';
+      setButtons();
+      setTimeout(goToPortfolio, 1000);
+    }
+
     function dealHand() {
-      deck = createDeck();
+      setRequiredScoreForDeal();
+
+      if (!firstDailyDealt) {
+        const seed = seedHash(getTodaySeed());
+        deck = createDeck(mulberry32(seed));
+        firstDailyDealt = true;
+      } else {
+        deck = createDeck();
+      }
+
       hand = [drawCard(), drawCard(), drawCard(), drawCard(), drawCard()];
+      hand.forEach(card => { card.winning = false; });
       held = [false, false, false, false, false];
       phase = 'dealt';
-      progressEl.textContent = 'Goal: Pair or better · Click cards to hold';
+      progressEl.textContent = `Need ${stakeLabel(requiredScore)} this hand · +chips on success`;
       statusEl.textContent = 'Select holds, then draw';
+      playDealSound();
       renderHand();
+      startTimer();
+      updateHud();
       setButtons();
+    }
+
+    function resolveHand(result, isTimeout = false) {
+      phase = 'scored';
+      stopTimer();
+
+      if (isTimeout) {
+        applyFailure();
+        statusEl.textContent = 'Time out — auto dealing';
+        progressEl.textContent = 'No chips from timed-out hand';
+        updateHud();
+        setButtons();
+        setTimeout(() => {
+          phase = 'idle';
+          dealHand();
+        }, 650);
+        return;
+      }
+
+      const qualifies = result.score >= requiredScore;
+      hand.forEach((card, index) => { card.winning = result.winningIndices.includes(index); });
+      renderHand();
+
+      if (qualifies) {
+        const award = chipByScore[result.score] || 0;
+        chips += award;
+        fails = 0;
+        statusEl.textContent = `Scored ${result.label} · +${award} chips`;
+        progressEl.textContent = `Hand result: ${result.label}`;
+      } else {
+        applyFailure();
+        const miss = detectNearMiss(hand);
+        statusEl.textContent = `Stake missed (${stakeLabel(requiredScore)} required)`;
+        progressEl.textContent = miss || `Hand result: ${result.label} · No chips`;
+      }
+
+      if (boostInPlay) {
+        boostInPlay = false;
+        stakeRoundQueued = false;
+      }
+
+      updateHud();
+      setButtons();
+
+      if (chips >= targetByDifficulty[difficulty]) {
+        showWinBanner();
+      }
     }
 
     function drawHeld() {
       if (phase !== 'dealt') return;
+      stopTimer();
       for (let i = 0; i < hand.length; i++) {
         if (!held[i]) hand[i] = drawCard();
       }
-      phase = 'scored';
-      renderHand();
+      playDrawSound();
 
       const result = evaluateHand(hand);
-      progressEl.textContent = `Final Hand: ${result.label}`;
+      resolveHand(result, false);
+    }
 
-      if (result.score >= 1) {
-        unlocked = true;
-        statusEl.textContent = 'Access granted';
-        setButtons();
-        setTimeout(goToPortfolio, 400);
-      } else {
-        statusEl.textContent = 'No pair — try a new hand';
-        setButtons();
-      }
+    function timeoutHand() {
+      if (phase !== 'dealt') return;
+      resolveHand({ score: 0, label: 'Timed Out', winningIndices: [] }, true);
     }
 
     function resetToNewHand() {
+      stopTimer();
       phase = 'idle';
       hand = [];
       held = [false, false, false, false, false];
       cardsEl.innerHTML = '';
-      progressEl.textContent = 'Goal: Pair or better · Click cards to hold';
+      timeLeft = timePerHand;
+      progressEl.textContent = 'Daily seed active: first hand is shared today · Click cards to hold';
       statusEl.textContent = 'Deal a hand';
+      updateHud();
+      setButtons();
+    }
+
+    function resetForDifficulty(nextDifficulty) {
+      difficulty = nextDifficulty;
+      chips = 0;
+      fails = 0;
+      requiredScore = baseReqByDifficulty[difficulty];
+      stakeRoundQueued = false;
+      boostInPlay = false;
+      firstDailyDealt = false;
+      phase = 'idle';
+      hand = [];
+      held = [false, false, false, false, false];
+      cardsEl.innerHTML = '';
+      progressEl.textContent = 'Daily seed active: first hand is shared today · Click cards to hold';
+      statusEl.textContent = `Mode: ${difficulty === 'quick' ? 'Quick Unlock' : 'Challenge'}`;
+      modeQuickBtn.classList.toggle('active', difficulty === 'quick');
+      modeChallengeBtn.classList.toggle('active', difficulty === 'challenge');
+      stopTimer();
+      timeLeft = timePerHand;
+      updateHud();
       setButtons();
     }
 
@@ -353,8 +759,16 @@
     drawBtn.addEventListener('click', drawHeld);
     newBtn.addEventListener('click', resetToNewHand);
     skipBtn.addEventListener('click', goToPortfolio);
+    modeQuickBtn.addEventListener('click', () => resetForDifficulty('quick'));
+    modeChallengeBtn.addEventListener('click', () => resetForDifficulty('challenge'));
+    soundBtn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      soundBtn.textContent = `Sound: ${soundOn ? 'On' : 'Off'}`;
+      if (soundOn) playTone(440, 0.05, 'triangle', 0.02);
+    });
+    enterBtn.addEventListener('click', goToPortfolio);
 
-    resetToNewHand();
+    resetForDifficulty('quick');
   </script>
 </body>
 </html>
