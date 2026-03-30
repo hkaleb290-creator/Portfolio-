@@ -1758,6 +1758,8 @@
 
       const loadAllParts = async () => {
         const basePath = window.location.pathname.split('/').slice(0, -1).join('/');
+        const meshes = [];
+        
         for (const part of partsList) {
           try {
             const url = `${window.location.origin}${basePath}/files/${part}`;
@@ -1772,11 +1774,72 @@
                 side: THREE.DoubleSide
               });
               const mesh = new THREE.Mesh(geometry, material);
+              
+              // Center each mesh on its own geometry before positioning
+              const box = new THREE.Box3().setFromObject(mesh);
+              const center = box.getCenter(new THREE.Vector3());
+              mesh.geometry.translate(-center.x, -center.y, -center.z);
+              
+              meshes.push({ mesh, part, box: new THREE.Box3().setFromObject(mesh) });
               group.add(mesh);
             }
           } catch (e) {
             console.log('Part load error:', part);
           }
+        }
+
+        if (meshes.length > 0) {
+          // Find fuselage parts (largest, goes in center)
+          const fuselageMeshes = meshes.filter(m => m.part.includes('Fus'));
+          const wingMeshes = meshes.filter(m => m.part.includes('Wing'));
+          const tailMeshes = meshes.filter(m => m.part.includes('HTP') || m.part.includes('VTP') || m.part.includes('Elev') || m.part.includes('Rudder'));
+          const aileronMeshes = meshes.filter(m => m.part.includes('Aileron'));
+          const otherMeshes = meshes.filter(m => !m.part.includes('Fus') && !m.part.includes('Wing') && !m.part.includes('HTP') && !m.part.includes('VTP') && !m.part.includes('Elev') && !m.part.includes('Rudder') && !m.part.includes('Aileron'));
+
+          // Position fuselage at origin
+          fuselageMeshes.forEach(fm => {
+            fm.mesh.position.set(0, 0, 0);
+          });
+
+          // Position wings on sides
+          wingMeshes.forEach((wm, idx) => {
+            const isRight = wm.part.includes('R');
+            const offset = wm.box.getSize(new THREE.Vector3());
+            wm.mesh.position.x = offset.x * 0.3;
+            wm.mesh.position.y = isRight ? offset.y * 0.5 : -offset.y * 0.5;
+            wm.mesh.position.z = offset.z * (idx % 2 === 0 ? -1 : 1) * 0.3;
+          });
+
+          // Position tail at rear
+          tailMeshes.forEach((tm, idx) => {
+            const size = tm.box.getSize(new THREE.Vector3());
+            tm.mesh.position.x = size.x * 4.5; // Far back
+            if (tm.part.includes('VTP') || tm.part.includes('Rudder')) {
+              tm.mesh.position.y = size.y * 0.5;
+            } else {
+              tm.mesh.position.y = tm.part.includes('R') ? size.y * 2 : -size.y * 2;
+            }
+          });
+
+          // Position ailerons on wing trailing edges
+          aileronMeshes.forEach((am, idx) => {
+            const size = am.box.getSize(new THREE.Vector3());
+            am.mesh.position.x = size.x * 2;
+            am.mesh.position.y = am.part.includes('R') ? size.y * 3 : -size.y * 3;
+            am.mesh.position.z = size.z * (idx % 2 === 0 ? -2 : 2);
+          });
+
+          // Position other parts (canopy, motor_holder, servo_holder, etc.) near fuselage
+          otherMeshes.forEach((om, idx) => {
+            const size = om.box.getSize(new THREE.Vector3());
+            if (om.part.includes('Canopy')) {
+              om.mesh.position.set(-size.x * 1.5, size.y * 2, 0);
+            } else if (om.part.includes('Motor')) {
+              om.mesh.position.set(-size.x * 4, 0, 0);
+            } else {
+              om.mesh.position.x = -size.x * (1 + idx * 0.5);
+            }
+          });
         }
 
         try {
