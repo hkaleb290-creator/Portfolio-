@@ -33,7 +33,7 @@
     }
 
     .panel {
-      width: min(560px, 100%);
+      width: min(700px, 100%);
       border: 1px solid var(--border);
       background: var(--card);
       padding: 1.2rem;
@@ -61,114 +61,300 @@
       margin-bottom: 0.95rem;
     }
 
-    .board {
-      position: relative;
+    .table {
       border: 1px solid var(--border);
-      background: var(--tag-bg);
-      height: 210px;
-      overflow: hidden;
-      margin-bottom: 0.75rem;
+      background: linear-gradient(180deg, rgba(122,31,31,0.12), rgba(36,29,30,0.85));
+      padding: 0.85rem;
+      margin-bottom: 0.8rem;
     }
 
-    .target {
-      position: absolute;
-      width: 50px;
-      height: 50px;
-      border: 1px solid var(--accent);
-      background: color-mix(in srgb, var(--accent) 18%, transparent);
-      color: var(--accent);
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 98px;
+      padding: 0.45rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.08s ease;
+      transition: border-color 0.2s, transform 0.12s, background 0.2s;
+      position: relative;
     }
 
-    .target:active { transform: scale(0.94); }
-    .target:hover { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .card:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .card.held { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, var(--bg)); }
+    .card.locked { cursor: default; }
+
+    .card-rank {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .card-suit {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .card-hold {
+      position: absolute;
+      top: 0.3rem;
+      right: 0.35rem;
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .card.held .card-hold { opacity: 1; }
+    .card.red .card-rank, .card.red .card-suit { color: #d57171; }
 
     .meta {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem;
       align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
     }
 
     .progress, .status {
       font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
+      color: var(--muted);
     }
 
-    .progress { color: var(--muted); }
-    .status { color: var(--accent); }
+    .status { color: var(--accent); text-align: right; }
 
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.38rem 0.68rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .btn:hover { color: var(--accent); border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary:hover { opacity: 0.9; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: repeat(5, minmax(50px, 1fr)); }
+      .card { min-height: 86px; }
+      .meta { grid-template-columns: 1fr; }
+      .status { text-align: left; }
+    }
   </style>
 </head>
 <body>
   <main class="panel">
     <p class="eyebrow">Access Check</p>
-    <h1>Quick Reflex Challenge</h1>
-    <p class="sub">Hit the moving target 5 times to unlock the portfolio.</p>
+    <h1>Mini Poker Gate</h1>
+    <p class="sub">Deal 5 cards, hold what you want, then draw once. Score <strong>One Pair or better</strong> to unlock the portfolio.</p>
 
-    <div class="board" id="board">
-      <button type="button" class="target" id="target" aria-label="Moving unlock target">Tap</button>
+    <div class="table">
+      <div class="cards" id="cards"></div>
     </div>
 
     <div class="meta">
-      <p class="progress" id="progress">Hits: 0 / 5</p>
-      <p class="status" id="status">In progress</p>
+      <p class="progress" id="progress">Goal: Pair or better · Click cards to hold</p>
+      <p class="status" id="status">Deal a hand</p>
+    </div>
+
+    <div class="actions">
+      <div class="btn-row">
+        <button type="button" class="btn primary" id="deal-btn">Deal</button>
+        <button type="button" class="btn" id="draw-btn" disabled>Draw Held</button>
+        <button type="button" class="btn" id="new-btn" disabled>New Hand</button>
+      </div>
+      <button type="button" class="btn" id="skip-btn">Skip Challenge</button>
     </div>
   </main>
 
   <script>
-    const requiredHits = 5;
-    let hits = 0;
+    const suits = ['♠', '♥', '♦', '♣'];
+    const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    const rankValue = { '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, J: 11, Q: 12, K: 13, A: 14 };
 
-    const board = document.getElementById('board');
-    const target = document.getElementById('target');
-    const progress = document.getElementById('progress');
-    const status = document.getElementById('status');
+    const cardsEl = document.getElementById('cards');
+    const progressEl = document.getElementById('progress');
+    const statusEl = document.getElementById('status');
+    const dealBtn = document.getElementById('deal-btn');
+    const drawBtn = document.getElementById('draw-btn');
+    const newBtn = document.getElementById('new-btn');
+    const skipBtn = document.getElementById('skip-btn');
 
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get('next');
     const next = nextParam ? decodeURIComponent(nextParam) : 'index.html';
 
-    function placeTarget() {
-      const size = 50;
-      const pad = 8;
-      const maxLeft = Math.max(pad, board.clientWidth - size - pad);
-      const maxTop = Math.max(pad, board.clientHeight - size - pad);
-      const left = Math.floor(Math.random() * (maxLeft - pad + 1)) + pad;
-      const top = Math.floor(Math.random() * (maxTop - pad + 1)) + pad;
-      target.style.left = `${left}px`;
-      target.style.top = `${top}px`;
-    }
+    let deck = [];
+    let hand = [];
+    let held = [false, false, false, false, false];
+    let phase = 'idle';
+    let unlocked = false;
 
     function goToPortfolio() {
       sessionStorage.setItem('kh_portfolio_unlocked', '1');
       window.location.replace(next || 'index.html');
     }
 
-    target.addEventListener('click', () => {
-      hits += 1;
-      progress.textContent = `Hits: ${hits} / ${requiredHits}`;
-      if (hits >= requiredHits) {
-        status.textContent = 'Access granted';
-        setTimeout(goToPortfolio, 220);
-        return;
+    function createDeck() {
+      const fresh = [];
+      suits.forEach(suit => ranks.forEach(rank => fresh.push({ rank, suit })));
+      for (let i = fresh.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [fresh[i], fresh[j]] = [fresh[j], fresh[i]];
       }
-      placeTarget();
-    });
+      return fresh;
+    }
 
-    window.addEventListener('resize', placeTarget);
+    function drawCard() {
+      return deck.pop();
+    }
 
-    placeTarget();
+    function renderHand() {
+      cardsEl.innerHTML = '';
+      hand.forEach((card, index) => {
+        const cardBtn = document.createElement('button');
+        cardBtn.type = 'button';
+        cardBtn.className = `card ${held[index] ? 'held' : ''} ${(card.suit === '♥' || card.suit === '♦') ? 'red' : ''} ${phase !== 'dealt' ? 'locked' : ''}`;
+        cardBtn.innerHTML = `
+          <span class="card-hold">Hold</span>
+          <span class="card-rank">${card.rank}</span>
+          <span class="card-suit">${card.suit}</span>
+        `;
+        cardBtn.addEventListener('click', () => {
+          if (phase !== 'dealt') return;
+          held[index] = !held[index];
+          renderHand();
+        });
+        cardsEl.appendChild(cardBtn);
+      });
+    }
+
+    function evaluateHand(cards) {
+      const values = cards.map(card => rankValue[card.rank]).sort((a, b) => a - b);
+      const suitCounts = cards.reduce((acc, card) => {
+        acc[card.suit] = (acc[card.suit] || 0) + 1;
+        return acc;
+      }, {});
+
+      const valueCounts = values.reduce((acc, value) => {
+        acc[value] = (acc[value] || 0) + 1;
+        return acc;
+      }, {});
+
+      const counts = Object.values(valueCounts).sort((a, b) => b - a);
+      const isFlush = Object.values(suitCounts).some(count => count === 5);
+
+      let isStraight = false;
+      if (new Set(values).size === 5) {
+        const highStraight = values[4] - values[0] === 4;
+        const wheelStraight = JSON.stringify(values) === JSON.stringify([2, 3, 4, 5, 14]);
+        isStraight = highStraight || wheelStraight;
+      }
+
+      const isRoyal = isStraight && isFlush && values.includes(10) && values.includes(14);
+
+      if (isRoyal) return { score: 9, label: 'Royal Flush' };
+      if (isStraight && isFlush) return { score: 8, label: 'Straight Flush' };
+      if (counts[0] === 4) return { score: 7, label: 'Four of a Kind' };
+      if (counts[0] === 3 && counts[1] === 2) return { score: 6, label: 'Full House' };
+      if (isFlush) return { score: 5, label: 'Flush' };
+      if (isStraight) return { score: 4, label: 'Straight' };
+      if (counts[0] === 3) return { score: 3, label: 'Three of a Kind' };
+      if (counts[0] === 2 && counts[1] === 2) return { score: 2, label: 'Two Pair' };
+      if (counts[0] === 2) return { score: 1, label: 'One Pair' };
+      return { score: 0, label: 'High Card' };
+    }
+
+    function setButtons() {
+      dealBtn.disabled = phase !== 'idle';
+      drawBtn.disabled = phase !== 'dealt';
+      newBtn.disabled = phase === 'idle';
+      if (unlocked) {
+        dealBtn.disabled = true;
+        drawBtn.disabled = true;
+        newBtn.disabled = true;
+      }
+    }
+
+    function dealHand() {
+      deck = createDeck();
+      hand = [drawCard(), drawCard(), drawCard(), drawCard(), drawCard()];
+      held = [false, false, false, false, false];
+      phase = 'dealt';
+      progressEl.textContent = 'Goal: Pair or better · Click cards to hold';
+      statusEl.textContent = 'Select holds, then draw';
+      renderHand();
+      setButtons();
+    }
+
+    function drawHeld() {
+      if (phase !== 'dealt') return;
+      for (let i = 0; i < hand.length; i++) {
+        if (!held[i]) hand[i] = drawCard();
+      }
+      phase = 'scored';
+      renderHand();
+
+      const result = evaluateHand(hand);
+      progressEl.textContent = `Final Hand: ${result.label}`;
+
+      if (result.score >= 1) {
+        unlocked = true;
+        statusEl.textContent = 'Access granted';
+        setButtons();
+        setTimeout(goToPortfolio, 400);
+      } else {
+        statusEl.textContent = 'No pair — try a new hand';
+        setButtons();
+      }
+    }
+
+    function resetToNewHand() {
+      phase = 'idle';
+      hand = [];
+      held = [false, false, false, false, false];
+      cardsEl.innerHTML = '';
+      progressEl.textContent = 'Goal: Pair or better · Click cards to hold';
+      statusEl.textContent = 'Deal a hand';
+      setButtons();
+    }
+
+    dealBtn.addEventListener('click', dealHand);
+    drawBtn.addEventListener('click', drawHeld);
+    newBtn.addEventListener('click', resetToNewHand);
+    skipBtn.addEventListener('click', goToPortfolio);
+
+    resetToNewHand();
   </script>
 </body>
 </html>
