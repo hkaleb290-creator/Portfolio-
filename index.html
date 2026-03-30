@@ -236,8 +236,8 @@
     .model-head { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
     .model-title { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
     .model-body { padding: 1rem; overflow: auto; }
-    .model-viewer { width: 100%; height: 360px; border: 1px solid var(--border); background: var(--tag-bg); margin-bottom: 0.65rem; position: relative; }
-    .model-viewer canvas { width: 100% !important; height: 100% !important; display: block; }
+    .model-viewer { width: 100%; height: 420px; border: 1px solid var(--border); background: var(--tag-bg); margin-bottom: 0.65rem; position: relative; }
+    .model-viewer iframe { width: 100%; height: 100%; border: 0; display: block; }
     .model-viewer-note { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
 
     /* TIMELINE */
@@ -871,8 +871,10 @@
         </div>
       </div>
       <div class="model-body">
-        <div id="rover-model-viewer" class="model-viewer"></div>
-        <p id="rover-model-status" class="model-viewer-note">Loading 3D model…</p>
+        <div id="rover-model-viewer" class="model-viewer">
+          <iframe id="rover-model-iframe" title="DIRT Rover 3D Model" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <p id="rover-model-status" class="model-viewer-note">Use mouse to rotate and zoom. If it doesn’t load, use Open links below.</p>
         <div class="docs-list" style="margin-bottom:0;">
           <article class="doc-item"><span class="doc-name">Auger_Bit.SLDPRT</span><a class="doc-open" href="Auger_Bit.SLDPRT" target="_blank">Open</a></article>
           <article class="doc-item"><span class="doc-name">DIRT Chassis (Box).SLDPRT</span><a class="doc-open" href="DIRT%20Chassis%20(Box).SLDPRT" target="_blank">Open</a></article>
@@ -891,8 +893,6 @@
     </div>
   </div>
 
-  <script src="https://cdn.babylonjs.com/babylon.js"></script>
-  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
   <script>
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
@@ -1034,84 +1034,24 @@
     // Rover model modal
     const modelModal = document.getElementById('model-modal');
     let roverViewerInitialized = false;
-    let roverEngine = null;
-    let roverScene = null;
-    let roverCamera = null;
-    let roverCanvas = null;
-
-    function resizeRoverViewer() {
-      if (roverEngine) roverEngine.resize();
-    }
+    function resizeRoverViewer() {}
 
     function initRoverViewer() {
       if (roverViewerInitialized) return;
       const statusEl = document.getElementById('rover-model-status');
-      const viewerHost = document.getElementById('rover-model-viewer');
-      if (!viewerHost || typeof BABYLON === 'undefined') {
+      const modelFrame = document.getElementById('rover-model-iframe');
+      if (!modelFrame) {
         if (statusEl) statusEl.textContent = '3D preview unavailable right now. Use Open links below.';
         return;
       }
 
-      roverCanvas = document.createElement('canvas');
-      roverCanvas.style.width = '100%';
-      roverCanvas.style.height = '100%';
-      roverCanvas.style.display = 'block';
-      viewerHost.appendChild(roverCanvas);
+      const origin = window.location.origin;
+      const basePath = window.location.pathname.replace(/[^/]*$/, '');
+      const objUrl = `${origin}${basePath}MainAssem.obj`;
+      const viewerUrl = `https://3dviewer.net/embed.html#model=${encodeURIComponent(objUrl)}`;
+      modelFrame.src = viewerUrl;
 
-      roverEngine = new BABYLON.Engine(roverCanvas, true, { preserveDrawingBuffer: true, stencil: true });
-      roverScene = new BABYLON.Scene(roverEngine);
-      roverScene.clearColor = new BABYLON.Color4(0.16, 0.13, 0.13, 1);
-
-      roverCamera = new BABYLON.ArcRotateCamera('roverCam', -Math.PI / 2, Math.PI / 2.4, 8, BABYLON.Vector3.Zero(), roverScene);
-      roverCamera.attachControl(roverCanvas, true);
-      roverCamera.wheelDeltaPercentage = 0.01;
-      roverCamera.lowerRadiusLimit = 1;
-      roverCamera.upperRadiusLimit = 30;
-
-      new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), roverScene).intensity = 0.9;
-      const dirLight = new BABYLON.DirectionalLight('dir', new BABYLON.Vector3(-1, -2, -1), roverScene);
-      dirLight.position = new BABYLON.Vector3(5, 8, 5);
-      dirLight.intensity = 0.7;
-
-      BABYLON.SceneLoader.Append('', 'MainAssem.obj', roverScene, () => {
-        const meshes = roverScene.meshes.filter(m => m && m.getTotalVertices && m.getTotalVertices() > 0);
-        if (meshes.length) {
-          let min = new BABYLON.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-          let max = new BABYLON.Vector3(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
-
-          meshes.forEach(mesh => {
-            const box = mesh.getBoundingInfo().boundingBox;
-            min = BABYLON.Vector3.Minimize(min, box.minimumWorld);
-            max = BABYLON.Vector3.Maximize(max, box.maximumWorld);
-            if (!mesh.material) {
-              const mat = new BABYLON.StandardMaterial('roverMat', roverScene);
-              mat.diffuseColor = new BABYLON.Color3(0.82, 0.82, 0.84);
-              mat.specularColor = new BABYLON.Color3(0.15, 0.15, 0.15);
-              mesh.material = mat;
-            }
-          });
-
-          const center = min.add(max).scale(0.5);
-          const size = max.subtract(min);
-          const maxDim = Math.max(size.x, size.y, size.z) || 1;
-          const scale = 4 / maxDim;
-
-          meshes.forEach(mesh => {
-            mesh.position = mesh.position.subtract(center);
-            mesh.scaling = mesh.scaling.scale(scale);
-          });
-
-          roverCamera.radius = 7;
-          roverCamera.target = BABYLON.Vector3.Zero();
-        }
-        if (statusEl) statusEl.textContent = 'Drag to rotate · Scroll to zoom';
-      }, undefined, (_scene, message) => {
-        if (statusEl) statusEl.textContent = `3D preview failed (${message || 'load error'}). Use Open links below.`;
-      });
-
-      roverEngine.runRenderLoop(() => {
-        if (roverScene) roverScene.render();
-      });
+      if (statusEl) statusEl.textContent = 'Use mouse to rotate and zoom. If it doesn’t load, use Open links below.';
 
       roverViewerInitialized = true;
       window.addEventListener('resize', resizeRoverViewer);
