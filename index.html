@@ -357,7 +357,7 @@
     <p class="section-label">Build Gallery — Fixed-Wing UAV</p>
     <div class="gallery-grid" id="gallery-grid"></div>
     <p class="gallery-note">
-      To show photos: place image files named <code>uav_photo_1.jpg</code> through <code>uav_photo_8.jpg</code> in the same folder as this HTML file. They'll appear automatically above.
+      To show photos: place image files named <code>uav_photo_1.jpg</code> through <code>uav_photo_6.jpg</code> in the same folder as this HTML file. They'll appear automatically above.
     </p>
   </section>
 
@@ -537,7 +537,7 @@
     captions.forEach((cap, i) => {
       const n = i + 1;
       const item = document.createElement('div');
-      item.className = 'gallery-item reveal';
+      item.className = 'gallery-item';
       item.innerHTML = `
         <img src="./uav_photo_${n}.jpg" alt="${cap}"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
