@@ -12,7 +12,7 @@ const server = http.createServer((req, res) => {
   
   // Default to index.html for root
   if (pathname === '/') {
-    pathname = '/Website (1).html';
+    pathname = '/index.html';
   }
   
   let filePath = path.join(__dirname, pathname);
