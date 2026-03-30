@@ -156,14 +156,6 @@
     .social-link:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,68,26,0.05); }
     [data-theme="dark"] .social-link:hover { background: rgba(224,90,43,0.1); }
 
-    /* TESTIMONIALS */
-    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .testimonial-card { background: var(--bg); padding: 2rem; display: flex; flex-direction: column; gap: 1rem; transition: background 0.2s; }
-    .testimonial-card:hover { background: var(--card); }
-    .testimonial-text { font-size: 13px; color: var(--muted); line-height: 1.8; font-style: italic; }
-    .testimonial-author { font-weight: 500; color: var(--ink); font-size: 12px; }
-    .testimonial-role { font-size: 11px; color: var(--accent); letter-spacing: 0.04em; }
-
     /* BLOG SECTION */
     .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
     .blog-card { background: var(--bg); padding: 2rem; display: flex; flex-direction: column; gap: 0.8rem; transition: background 0.2s; cursor: pointer; }
@@ -210,7 +202,6 @@
       <nav>
         <a href="#projects">Work</a>
         <a href="#publications">Research</a>
-        <a href="#testimonials">Testimonials</a>
         <a href="#blog">Updates</a>
         <a href="#experience">Background</a>
         <a href="#skills">Skills</a>
@@ -229,7 +220,6 @@
   <div class="mobile-nav" id="mobile-nav">
     <a href="#projects" onclick="closeMobileNav()">Work</a>
     <a href="#publications" onclick="closeMobileNav()">Research</a>
-    <a href="#testimonials" onclick="closeMobileNav()">Testimonials</a>
     <a href="#blog" onclick="closeMobileNav()">Updates</a>
     <a href="#experience" onclick="closeMobileNav()">Background</a>
     <a href="#skills" onclick="closeMobileNav()">Skills</a>
@@ -333,28 +323,6 @@
           <p class="pub-venue">NLC STEM Club · Northeast Lakeview College (Alamo Colleges) · Sep 2025 – Mar 2026 · 23 pp.</p>
         </div>
         <a class="pub-link" href="aerospace_report (3).pdf" target="_blank">↗ View Report</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONIALS -->
-  <section class="section" id="testimonials">
-    <p class="section-label">What People Say</p>
-    <div class="testimonials-grid">
-      <div class="testimonial-card reveal">
-        <p class="testimonial-text">"Kaleb's leadership on the DIRT Rover software team has been transformative. His ability to coordinate across subsystems and drive technical decisions is exceptional."</p>
-        <p class="testimonial-author">Dr. Sarah Wilson</p>
-        <p class="testimonial-role">Faculty Advisor, TURTLE Robotics</p>
-      </div>
-      <div class="testimonial-card reveal">
-        <p class="testimonial-text">"The fixed-wing UAV project showcased incredible engineering execution. From 3D printing to sensor integration, Kaleb's attention to detail and project management is outstanding."</p>
-        <p class="testimonial-author">Prof. James Chen</p>
-        <p class="testimonial-role">Engineering Lead, NLC STEM Club</p>
-      </div>
-      <div class="testimonial-card reveal">
-        <p class="testimonial-text">"Leading the NLC STEM Club from zero members to 90+ has been impressive. Kaleb's vision for practical, hands-on engineering education is exactly what our campus needed."</p>
-        <p class="testimonial-author">Dr. Amanda Rodriguez</p>
-        <p class="testimonial-role">NLC Department Chair</p>
       </div>
     </div>
   </section>
