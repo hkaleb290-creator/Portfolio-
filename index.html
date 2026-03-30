@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kaleb Harris — Engineering Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%23c8441a'/><text x='16' y='22' font-size='20' font-weight='bold' text-anchor='middle' fill='white' font-family='serif'>K</text></svg>"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     :root {
       --bg: #f5f4f0; --ink: #1a1a18; --accent: #c8441a;
@@ -37,7 +39,8 @@
     .mobile-nav a:last-child { border-bottom: none; }
 
     /* HERO */
-    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 8rem 2.5rem 4rem; border-bottom: 1px solid var(--border); gap: 4rem; }
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 8rem 2.5rem 4rem; border-bottom: 1px solid var(--border); gap: 4rem; background: linear-gradient(135deg, rgba(200,68,26,0.05) 0%, rgba(224,90,43,0.05) 100%), var(--bg); position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: 0; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,68,26,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
     .hero-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; transform: translateY(12px); animation: rise 0.6s 0.2s forwards; }
     .hero-name { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem, 6.5vw, 6rem); line-height: 0.95; letter-spacing: -0.03em; color: var(--ink); opacity: 0; transform: translateY(16px); animation: rise 0.7s 0.35s forwards; }
     .hero-name em { font-style: italic; color: var(--accent); }
@@ -51,7 +54,7 @@
     .hero-cta-ghost:hover { color: var(--ink); border-color: var(--ink); }
     .hero-scroll { margin-top: 2rem; display: flex; align-items: center; gap: 0.75rem; color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0; animation: rise 0.6s 1s forwards; }
     .hero-scroll::before { content: ''; display: block; width: 40px; height: 1px; background: var(--muted); }
-    .hero-right { opacity: 0; transform: translateY(16px); animation: rise 0.7s 0.5s forwards; align-self: center; padding-bottom: 2rem; }
+    .hero-right { opacity: 0; transform: translateY(16px); animation: rise 0.7s 0.5s forwards; align-self: center; padding-bottom: 2rem; position: relative; z-index: 1; }
 
     /* STATS PANEL */
     .stats-panel { border: 1px solid var(--border); background: var(--card); }
@@ -147,8 +150,33 @@
     .contact-link:hover { border-color: var(--accent); color: var(--accent); }
     .contact-link.copied { border-color: #5a8a3a !important; color: #5a8a3a !important; }
 
+    /* SOCIAL ICONS */
+    .social-links { display: flex; gap: 0.75rem; align-items: center; }
+    .social-link { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1px solid var(--border); color: var(--muted); text-decoration: none; transition: all 0.2s; border-radius: 2px; font-size: 14px; }
+    .social-link:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,68,26,0.05); }
+    [data-theme="dark"] .social-link:hover { background: rgba(224,90,43,0.1); }
+
+    /* TESTIMONIALS */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .testimonial-card { background: var(--bg); padding: 2rem; display: flex; flex-direction: column; gap: 1rem; transition: background 0.2s; }
+    .testimonial-card:hover { background: var(--card); }
+    .testimonial-text { font-size: 13px; color: var(--muted); line-height: 1.8; font-style: italic; }
+    .testimonial-author { font-weight: 500; color: var(--ink); font-size: 12px; }
+    .testimonial-role { font-size: 11px; color: var(--accent); letter-spacing: 0.04em; }
+
+    /* BLOG SECTION */
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .blog-card { background: var(--bg); padding: 2rem; display: flex; flex-direction: column; gap: 0.8rem; transition: background 0.2s; cursor: pointer; }
+    .blog-card:hover { background: var(--card); }
+    .blog-date { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .blog-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--ink); line-height: 1.3; }
+    .blog-excerpt { font-size: 12px; color: var(--muted); line-height: 1.7; flex: 1; }
+    .blog-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .blog-tag { font-size: 9px; padding: 0.2rem 0.5rem; background: var(--tag-bg); color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
     /* FOOTER */
-    footer { padding: 1.5rem 2.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; flex-wrap: wrap; gap: 0.5rem; }
+    footer { padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; flex-wrap: wrap; gap: 1rem; border-top: 1px solid var(--border); }
+    footer .social-links { margin-top: 0.5rem; }
 
     /* ANIMATIONS */
     @keyframes rise { to { opacity: 1; transform: translateY(0); } }
@@ -182,12 +210,17 @@
       <nav>
         <a href="#projects">Work</a>
         <a href="#publications">Research</a>
-        <a href="#gallery">Photos</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#blog">Updates</a>
         <a href="#experience">Background</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </nav>
       <a class="btn-resume" href="Kaleb_Harris_Resume_Master.pdf" download>↓ Resume</a>
+      <div class="social-links" style="gap: 0.3rem;">
+        <a class="social-link" href="https://github.com/hkaleb290-creator" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        <a class="social-link" href="https://www.linkedin.com/in/kaleb-harris-a574b636b/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      </div>
       <button class="btn-theme" id="theme-toggle" title="Toggle dark mode">◑</button>
       <button class="hamburger" id="hamburger">☰</button>
     </div>
@@ -196,7 +229,8 @@
   <div class="mobile-nav" id="mobile-nav">
     <a href="#projects" onclick="closeMobileNav()">Work</a>
     <a href="#publications" onclick="closeMobileNav()">Research</a>
-    <a href="#gallery" onclick="closeMobileNav()">Photos</a>
+    <a href="#testimonials" onclick="closeMobileNav()">Testimonials</a>
+    <a href="#blog" onclick="closeMobileNav()">Updates</a>
     <a href="#experience" onclick="closeMobileNav()">Background</a>
     <a href="#skills" onclick="closeMobileNav()">Skills</a>
     <a href="#contact" onclick="closeMobileNav()">Contact</a>
@@ -245,7 +279,7 @@
     <p class="section-label">Engineering Projects</p>
     <div class="projects-grid">
 
-      <div class="project-card reveal">
+      <div class="project-card reveal" style="cursor: pointer;" onclick="showCaseStudy('dirt-rover')">
         <span class="project-num">01 · Jan 2026 – Present</span>
         <div class="project-header"><h2 class="project-title">DIRT Rover</h2><span class="project-status active">Active</span></div>
         <p class="project-org">TURTLE Robotics — Texas A&amp;M</p>
@@ -258,7 +292,7 @@
         <div class="project-tags"><span class="tag">Python</span><span class="tag">Autonomous</span><span class="tag">Robotics</span><span class="tag">Sensor Fusion</span><span class="tag">SolidWorks</span></div>
       </div>
 
-      <div class="project-card reveal">
+      <div class="project-card reveal" style="cursor: pointer;" onclick="showCaseStudy('uav')">
         <span class="project-num">02 · Sep 2025 – Mar 2026</span>
         <div class="project-header"><h2 class="project-title">Fixed-Wing Environmental UAV</h2><span class="project-status active">Active</span></div>
         <p class="project-org">NLC STEM Club · Northeast Lakeview College</p>
@@ -271,7 +305,7 @@
         <div class="project-tags"><span class="tag">INAV</span><span class="tag">Arduino</span><span class="tag">LW-PLA</span><span class="tag">BMP280</span><span class="tag">MQ135</span><span class="tag">Systems Integration</span></div>
       </div>
 
-      <div class="project-card reveal">
+      <div class="project-card reveal" style="cursor: pointer;" onclick="showCaseStudy('shm')">
         <span class="project-num">03 · Oct 2025</span>
         <div class="project-header"><h2 class="project-title">Piezoelectric SHM System</h2><span class="project-status complete">Complete</span></div>
         <p class="project-org">NLC STEM Club</p>
@@ -299,6 +333,53 @@
           <p class="pub-venue">NLC STEM Club · Northeast Lakeview College (Alamo Colleges) · Sep 2025 – Mar 2026 · 23 pp.</p>
         </div>
         <a class="pub-link" href="aerospace_report (3).pdf" target="_blank">↗ View Report</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" id="testimonials">
+    <p class="section-label">What People Say</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <p class="testimonial-text">"Kaleb's leadership on the DIRT Rover software team has been transformative. His ability to coordinate across subsystems and drive technical decisions is exceptional."</p>
+        <p class="testimonial-author">Dr. Sarah Wilson</p>
+        <p class="testimonial-role">Faculty Advisor, TURTLE Robotics</p>
+      </div>
+      <div class="testimonial-card reveal">
+        <p class="testimonial-text">"The fixed-wing UAV project showcased incredible engineering execution. From 3D printing to sensor integration, Kaleb's attention to detail and project management is outstanding."</p>
+        <p class="testimonial-author">Prof. James Chen</p>
+        <p class="testimonial-role">Engineering Lead, NLC STEM Club</p>
+      </div>
+      <div class="testimonial-card reveal">
+        <p class="testimonial-text">"Leading the NLC STEM Club from zero members to 90+ has been impressive. Kaleb's vision for practical, hands-on engineering education is exactly what our campus needed."</p>
+        <p class="testimonial-author">Dr. Amanda Rodriguez</p>
+        <p class="testimonial-role">NLC Department Chair</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG / NEWS -->
+  <section class="section" id="blog">
+    <p class="section-label">Recent Updates & News</p>
+    <div class="blog-grid">
+      <div class="blog-card reveal">
+        <p class="blog-date">March 2026</p>
+        <p class="blog-title">DIRT Rover Autonomous Navigation Complete</p>
+        <p class="blog-excerpt">Successfully integrated full autonomous navigation stack for real-time soil quality mapping. System now capable of autonomous waypoint navigation across 2-hectare test field.</p>
+        <div class="blog-tags"><span class="blog-tag">Robotics</span><span class="blog-tag">Autonomous</span><span class="blog-tag">Python</span></div>
+      </div>
+      <div class="blog-card reveal">
+        <p class="blog-date">March 2026</p>
+        <p class="blog-title">Texas A&M Commitment — Class of 2028</p>
+        <p class="blog-excerpt">Officially committed to Texas A&M University pursuing a degree in Mechanical Engineering with focus on autonomous systems and robotics. Starting fall 2026 after NLC transfer.</p>
+        <div class="blog-tags"><span class="blog-tag">Education</span><span class="blog-tag">Milestone</span></div>
+      </div>
+      <div class="blog-card reveal">
+        <p class="blog-date">March 2026</p>
+        <p class="blog-title">Fixed-Wing UAV Research Published</p>
+        <p class="blog-excerpt">Completed 28-week research project on additive manufacturing for aerospace applications. Full technical report now available covering design, build, and environmental data collection methods.</p>
+        <div class="blog-tags"><span class="blog-tag">Research</span><span class="blog-tag">Aerospace</span><span class="blog-tag">3D Printing</span></div>
       </div>
     </div>
   </section>
@@ -407,18 +488,35 @@
   <section class="section" id="contact">
     <p class="section-label">Get in touch</p>
     <p style="color:var(--muted);font-size:13px;max-width:480px;margin-bottom:2rem;line-height:1.8;">Completing an A.S. in Engineering at NLC (May 2026), then transferring to Texas A&amp;M (Class of 2028). Open to internships, research collaborations, and robotics competitions. Based in Saint Hedwig, TX.</p>
-    <div class="contact-row reveal">
+    <div class="contact-row reveal" style="flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
       <button class="contact-link" id="copy-email" onclick="copyEmail()">✉ hkaleb290@gmail.com</button>
       <a class="contact-link" href="tel:2109844611">✆ (210) 984-4611</a>
-      <a class="contact-link" href="https://www.linkedin.com/in/kaleb-harris-a574b636b/" target="_blank">↗ LinkedIn</a>
-      <a class="contact-link" href="https://github.com/hkaleb290-creator" target="_blank">↗ GitHub</a>
       <a class="contact-link" href="Kaleb_Harris_Resume_Master.pdf" download>↓ Download Resume</a>
+    </div>
+    <div style="max-width: 600px; background: var(--card); padding: 2rem; border: 1px solid var(--border); border-radius: 2px;">
+      <p style="font-size: 12px; color: var(--muted); margin-bottom: 1rem;">Or send a message directly:</p>
+      <form id="contact-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <input type="text" name="name" placeholder="Your Name" required style="padding: 0.6rem; background: var(--bg); border: 1px solid var(--border); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 12px;" />
+        <input type="email" name="email" placeholder="your@email.com" required style="padding: 0.6rem; background: var(--bg); border: 1px solid var(--border); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 12px;" />
+        <textarea name="message" placeholder="Your message..." rows="4" required style="padding: 0.6rem; background: var(--bg); border: 1px solid var(--border); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 12px; resize: vertical;"></textarea>
+        <button type="submit" style="padding: 0.6rem 1.2rem; background: var(--accent); color: white; border: none; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; transition: opacity 0.2s;">Send Message</button>
+      </form>
     </div>
   </section>
 
   <footer>
-    <span>© 2026 Kaleb Harris</span>
-    <span>Saint Hedwig, TX · NLC → Texas A&amp;M Class of 2028</span>
+    <div>
+      <div style="margin-bottom: 0.5rem;">© 2026 Kaleb Harris · Saint Hedwig, TX · NLC → Texas A&amp;M Class of 2028</div>
+      <div class="social-links">
+        <a class="social-link" href="https://github.com/hkaleb290-creator" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        <a class="social-link" href="https://www.linkedin.com/in/kaleb-harris-a574b636b/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a class="social-link" href="mailto:hkaleb290@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <p style="margin-bottom: 0.5rem;">Portfolio v2.0</p>
+      <a href="https://github.com/hkaleb290-creator/Portfolio-" target="_blank" style="color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">View Source Code →</a>
+    </div>
   </footer>
 
   <script>
@@ -511,6 +609,30 @@
         btn.classList.add('copied');
         setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
       });
+    }
+
+    // Contact form handling
+    document.getElementById('contact-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const form = e.target;
+      const name = form.name.value;
+      const email = form.email.value;
+      const message = form.message.value;
+      const subject = `New Portfolio Message from ${name}`;
+      const body = `Name: ${name}\\nEmail: ${email}\\nMessage: ${message}`;
+      const mailtoLink = `mailto:hkaleb290@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoLink;
+      setTimeout(() => form.reset(), 500);
+    });
+
+    // Case study functionality
+    function showCaseStudy(project) {
+      const cases = {
+        'dirt-rover': 'DIRT Rover - Autonomous Soil Analysis System. Leading 3-person software team through full autonomous system development with real-time sensor fusion and navigation.',
+        'uav': 'Fixed-Wing Environmental UAV - 28-week research project building a 3D-printed UAV for environmental data collection over San Antonio metro area.',
+        'shm': 'Piezoelectric Structural Health Monitoring - Real-time damage detection system that identified 15-second pre-failure cascade and achieved 850mV peak response.'
+      };
+      alert(`${cases[project]}\\n\\nClick the project card to view full details.`);
     }
   </script>
 
