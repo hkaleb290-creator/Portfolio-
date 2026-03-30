@@ -1129,6 +1129,34 @@
       return faces;
     }
 
+    function makePrismY(cx, cy, cz, height, radius, segments, color) {
+      const faces = [];
+      const y0 = cy - height / 2;
+      const y1 = cy + height / 2;
+      const seg = Math.max(8, segments || 12);
+
+      for (let i = 0; i < seg; i++) {
+        const a0 = (i / seg) * Math.PI * 2;
+        const a1 = ((i + 1) / seg) * Math.PI * 2;
+        const x0 = cx + Math.cos(a0) * radius;
+        const z0 = cz + Math.sin(a0) * radius;
+        const x1 = cx + Math.cos(a1) * radius;
+        const z1 = cz + Math.sin(a1) * radius;
+        faces.push({ points: [[x0, y0, z0], [x1, y0, z1], [x1, y1, z1], [x0, y1, z0]], color });
+      }
+
+      const capA = [];
+      const capB = [];
+      for (let i = 0; i < seg; i++) {
+        const a = (i / seg) * Math.PI * 2;
+        capA.push([cx + Math.cos(a) * radius, y0, cz + Math.sin(a) * radius]);
+        capB.unshift([cx + Math.cos(a) * radius, y1, cz + Math.sin(a) * radius]);
+      }
+      faces.push({ points: capA, color });
+      faces.push({ points: capB, color });
+      return faces;
+    }
+
     function buildProceduralRover() {
       const faces = [];
       const frameColor = '#aeb4bf';
@@ -1136,6 +1164,7 @@
       const darkMetal = '#4a515c';
       const wheelColor = '#2f333a';
       const accent = '#bcc2cb';
+      const maroonAccent = '#7a1f1f';
 
       // Chassis rails + cross members
       faces.push(...makeCuboid(0, -0.05, -1.05, 4.95, 0.25, 0.35, railColor));
@@ -1147,17 +1176,30 @@
       // Top deck + electronics bay
       faces.push(...makeCuboid(0.25, 0.32, 0, 2.7, 0.22, 1.85, '#b8bec8'));
       faces.push(...makeCuboid(0.35, 0.63, 0.02, 1.9, 0.42, 1.25, accent));
+      faces.push(...makeCuboid(0.1, 0.5, 0.98, 2.2, 0.1, 0.14, maroonAccent));
+      faces.push(...makeCuboid(0.1, 0.5, -0.98, 2.2, 0.1, 0.14, maroonAccent));
 
       // Sensor mast + head
       faces.push(...makeCuboid(-1.55, 0.72, 0, 0.34, 1.6, 0.34, '#c6cad1'));
       faces.push(...makeCuboid(-1.55, 1.62, 0, 0.24, 0.36, 0.24, '#d8dbe1'));
       faces.push(...makeCuboid(-1.35, 1.52, 0.0, 0.32, 0.14, 0.68, '#b0b7c2'));
+      faces.push(...makePrismY(-1.55, 1.0, 0, 1.75, 0.09, 12, '#9ea6b1'));
 
       // Auger / drill assembly at front
       faces.push(...makeCuboid(2.15, 0.18, 0, 0.6, 0.28, 0.8, darkMetal));
       faces.push(...makePrismX(2.68, 0.15, 0, 1.25, 0.2, 12, '#757d89'));
       faces.push(...makePrismX(3.25, 0.15, 0, 0.38, 0.1, 10, '#9299a4'));
       faces.push(...makeCuboid(2.95, 0.38, 0, 0.22, 0.1, 0.22, '#666f7b'));
+      faces.push(...makeCuboid(2.45, 0.38, 0, 0.18, 0.5, 0.18, '#616a77'));
+
+      // Auger fins (simple helical-like stepped blades)
+      for (let i = 0; i < 5; i++) {
+        const t = i / 4;
+        const x = 2.35 + t * 0.75;
+        const z = Math.sin(t * Math.PI * 2) * 0.12;
+        faces.push(...makeCuboid(x, 0.15, z, 0.16, 0.3, 0.05, '#9aa1ac'));
+        faces.push(...makeCuboid(x, 0.15, -z, 0.16, 0.3, 0.05, '#9aa1ac'));
+      }
 
       // Side suspension arms
       faces.push(...makeCuboid(-1.55, -0.35, -1.28, 0.95, 0.16, 0.16, '#7f8896'));
@@ -1173,6 +1215,7 @@
       wheelPositions.forEach(([x, y, z]) => {
         faces.push(...makePrismZ(x, y, z, 0.42, 0.5, 16, wheelColor));
         faces.push(...makePrismZ(x, y, z, 0.14, 0.22, 12, '#626a76'));
+        faces.push(...makePrismZ(x, y, z, 0.06, 0.08, 8, '#a7adb8'));
       });
 
       return faces;
@@ -1198,16 +1241,32 @@
       const cx = w / 2;
       const cy = h / 2 + 12;
       const cameraDistance = 11;
+      const lightDir = [-0.45, 0.75, 0.5];
+      const lightMag = Math.hypot(lightDir[0], lightDir[1], lightDir[2]) || 1;
+      lightDir[0] /= lightMag;
+      lightDir[1] /= lightMag;
+      lightDir[2] /= lightMag;
       const projectedFaces = [];
 
       roverFaces.forEach(face => {
         const transformed = face.points.map(([x, y, z]) => rotatePoint(x, y, z, roverYaw, roverPitch));
         const avgZ = transformed.reduce((a, p) => a + p[2], 0) / transformed.length;
+        const p0 = transformed[0], p1 = transformed[1], p2 = transformed[2];
+        const ux = p1[0] - p0[0], uy = p1[1] - p0[1], uz = p1[2] - p0[2];
+        const vx = p2[0] - p0[0], vy = p2[1] - p0[1], vz = p2[2] - p0[2];
+        const nx = uy * vz - uz * vy;
+        const ny = uz * vx - ux * vz;
+        const nz = ux * vy - uy * vx;
+        const nMag = Math.hypot(nx, ny, nz) || 1;
+        const ndx = nx / nMag, ndy = ny / nMag, ndz = nz / nMag;
+        const light = Math.max(0.1, ndx * lightDir[0] + ndy * lightDir[1] + ndz * lightDir[2]);
+        const shade = 0.45 + light * 0.75;
+
         const pts2d = transformed.map(([x, y, z]) => {
           const perspective = roverZoom / (z + cameraDistance);
           return [cx + x * perspective, cy - y * perspective];
         });
-        projectedFaces.push({ pts2d, depth: avgZ, color: face.color });
+        projectedFaces.push({ pts2d, depth: avgZ, color: face.color, shade });
       });
 
       projectedFaces.sort((a, b) => a.depth - b.depth);
@@ -1217,7 +1276,14 @@
         roverCtx.moveTo(face.pts2d[0][0], face.pts2d[0][1]);
         for (let i = 1; i < face.pts2d.length; i++) roverCtx.lineTo(face.pts2d[i][0], face.pts2d[i][1]);
         roverCtx.closePath();
-        roverCtx.fillStyle = face.color;
+        const color = face.color.replace('#', '');
+        const r = parseInt(color.slice(0, 2), 16);
+        const g = parseInt(color.slice(2, 4), 16);
+        const b = parseInt(color.slice(4, 6), 16);
+        const litR = Math.max(0, Math.min(255, Math.round(r * face.shade)));
+        const litG = Math.max(0, Math.min(255, Math.round(g * face.shade)));
+        const litB = Math.max(0, Math.min(255, Math.round(b * face.shade)));
+        roverCtx.fillStyle = `rgb(${litR}, ${litG}, ${litB})`;
         roverCtx.strokeStyle = 'rgba(18,16,18,0.55)';
         roverCtx.lineWidth = 1;
         roverCtx.fill();
