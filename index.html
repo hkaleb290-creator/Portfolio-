@@ -539,7 +539,7 @@
       const item = document.createElement('div');
       item.className = 'gallery-item reveal';
       item.innerHTML = `
-        <img src="uav_photo_${n}.jpg" alt="${cap}"
+        <img src="./uav_photo_${n}.jpg" alt="${cap}"
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
           onload="this.closest('.gallery-item').setAttribute('data-loaded','1')"
           style="display:block"/>
