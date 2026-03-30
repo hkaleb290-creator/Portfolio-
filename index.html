@@ -1775,12 +1775,10 @@
               });
               const mesh = new THREE.Mesh(geometry, material);
               
-              // Center each mesh on its own geometry before positioning
+              // Do NOT center - keep at CAD position
               const box = new THREE.Box3().setFromObject(mesh);
-              const center = box.getCenter(new THREE.Vector3());
-              mesh.geometry.translate(-center.x, -center.y, -center.z);
               
-              meshes.push({ mesh, part, box: new THREE.Box3().setFromObject(mesh) });
+              meshes.push({ mesh, part, box });
               group.add(mesh);
             }
           } catch (e) {
@@ -1789,92 +1787,89 @@
         }
 
         if (meshes.length > 0) {
-          // Find fuselage parts (largest, goes in center)
+          // Find fuselage center position from all fuselage parts
           const fuselageMeshes = meshes.filter(m => m.part.includes('Fus'));
-          const wingMeshes = meshes.filter(m => m.part.includes('Wing') && !m.part.includes('Wing_C'));
-          const wingCenterMesh = meshes.find(m => m.part.includes('Wing_C'));
-          const tailMeshes = meshes.filter(m => m.part.includes('HTP') || m.part.includes('VTP'));
-          const elevMeshes = meshes.filter(m => m.part.includes('Elev'));
-          const rudderMesh = meshes.find(m => m.part.includes('Rudder'));
-          const aileronMeshes = meshes.filter(m => m.part.includes('Aileron'));
-          const otherMeshes = meshes.filter(m => !m.part.includes('Fus') && !m.part.includes('Wing') && !m.part.includes('HTP') && !m.part.includes('VTP') && !m.part.includes('Elev') && !m.part.includes('Rudder') && !m.part.includes('Aileron'));
-
-          // Position fuselage at origin
+          let fuselageMinX = Infinity, fuselageMaxX = -Infinity;
+          let fuselageMinY = Infinity, fuselageMaxY = -Infinity;
+          let fuselageMinZ = Infinity, fuselageMaxZ = -Infinity;
+          
           fuselageMeshes.forEach(fm => {
-            fm.mesh.position.set(0, 0, 0);
+            fuselageMinX = Math.min(fuselageMinX, fm.box.min.x);
+            fuselageMaxX = Math.max(fuselageMaxX, fm.box.max.x);
+            fuselageMinY = Math.min(fuselageMinY, fm.box.min.y);
+            fuselageMaxY = Math.max(fuselageMaxY, fm.box.max.y);
+            fuselageMinZ = Math.min(fuselageMinZ, fm.box.min.z);
+            fuselageMaxZ = Math.max(fuselageMaxZ, fm.box.max.z);
+          });
+          
+          const fuselageCenterX = (fuselageMinX + fuselageMaxX) / 2;
+          const fuselageMinYPos = fuselageMinY;
+
+          // Adjust all fuselage parts to connect
+          fuselageMeshes.forEach((fm, idx) => {
+            if (idx === 0) {
+              fm.mesh.position.set(-fuselageCenterX, -fuselageMinYPos, -(fuselageMinZ + fuselageMaxZ) / 2);
+            } else {
+              const prevMax = fuselageMeshes[idx - 1].box.max.x;
+              const currMin = fm.box.min.x;
+              fm.mesh.position.x = fuselageMeshes[idx - 1].mesh.position.x + (prevMax - currMin);
+              fm.mesh.position.y = -fuselageMinYPos;
+              fm.mesh.position.z = -(fuselageMinZ + fuselageMaxZ) / 2;
+            }
           });
 
-          // Position wing center
-          if (wingCenterMesh) {
-            wingCenterMesh.mesh.position.set(0, 0, 0);
-          }
-
-          // Position wings on top, extending outward
-          wingMeshes.forEach((wm, idx) => {
+          // Position wings attached to fuselage
+          const wingMeshes = meshes.filter(m => m.part.includes('Wing') && !m.part.includes('Wing_C'));
+          wingMeshes.forEach((wm) => {
             const isRight = wm.part.includes('R');
-            const size = wm.box.getSize(new THREE.Vector3());
+            const wingBox = wm.box;
+            const wingHeight = wingBox.max.y - wingBox.min.y;
             
-            // Outer wings extend further
-            if (wm.part.includes('2') || wm.part.includes('3')) {
-              wm.mesh.position.x = size.x * 0.2;
-              wm.mesh.position.y = size.y * 1.2; // On top
-              wm.mesh.position.z = isRight ? size.z * 1.5 : -size.z * 1.5;
-            } else {
-              // Main wings
-              wm.mesh.position.x = size.x * 0.1;
-              wm.mesh.position.y = size.y * 1.0; // On top
-              wm.mesh.position.z = isRight ? size.z * 0.8 : -size.z * 0.8;
-            }
+            // Attach to top of fuselage
+            wm.mesh.position.x = -fuselageCenterX + (wingBox.min.x - wingBox.min.x) * 0.1;
+            wm.mesh.position.y = -fuselageMinYPos + wingHeight * 0.5; // On top
+            wm.mesh.position.z = isRight ? -(fuselageMinZ) - (wingBox.max.z - wingBox.min.z) * 0.3 : -(fuselageMaxZ) + (wingBox.max.z - wingBox.min.z) * 0.3;
           });
 
-          // Position horizontal tail plane at rear, on sides
+          // Position tail at rear of fuselage
+          const tailMeshes = meshes.filter(m => (m.part.includes('HTP') || m.part.includes('VTP') || m.part.includes('Elev') || m.part.includes('Rudder')));
           tailMeshes.forEach((tm) => {
-            const size = tm.box.getSize(new THREE.Vector3());
-            if (tm.part.includes('HTP')) {
-              tm.mesh.position.x = size.x * 3.5; // Far back
-              tm.mesh.position.y = size.y * 0.3; // Slightly above fuselage
-              tm.mesh.position.z = tm.part.includes('R') ? size.z * 1.2 : -size.z * 1.2;
-            } else if (tm.part.includes('VTP')) {
-              tm.mesh.position.x = size.x * 3.8; // Even further back
-              tm.mesh.position.y = size.y * 1.0; // Centered vertically
+            const isRight = tm.part.includes('R');
+            const tailBox = tm.box;
+            
+            tm.mesh.position.x = fuselageMaxX + tailBox.max.x * 0.5;
+            
+            if (tm.part.includes('VTP') || tm.part.includes('Rudder')) {
+              tm.mesh.position.y = -fuselageMinYPos + (tailBox.max.y - tailBox.min.y) * 0.5;
               tm.mesh.position.z = 0;
+            } else {
+              tm.mesh.position.y = -fuselageMinYPos;
+              tm.mesh.position.z = isRight ? -(fuselageMinZ) - (tailBox.max.z - tailBox.min.z) * 0.2 : -(fuselageMaxZ) + (tailBox.max.z - tailBox.min.z) * 0.2;
             }
           });
 
-          // Position elevators on HTP trailing edge
-          elevMeshes.forEach((em) => {
-            const size = em.box.getSize(new THREE.Vector3());
-            em.mesh.position.x = size.x * 3.8;
-            em.mesh.position.y = size.y * 0.2;
-            em.mesh.position.z = em.part.includes('R') ? size.z * 1.4 : -size.z * 1.4;
-          });
-
-          // Position rudder on VTP
-          if (rudderMesh) {
-            const size = rudderMesh.box.getSize(new THREE.Vector3());
-            rudderMesh.mesh.position.x = size.x * 4.0;
-            rudderMesh.mesh.position.y = size.y * 1.3;
-            rudderMesh.mesh.position.z = 0;
-          }
-
-          // Position ailerons on wing trailing edges
+          // Position ailerons on wings
+          const aileronMeshes = meshes.filter(m => m.part.includes('Aileron'));
           aileronMeshes.forEach((am) => {
-            const size = am.box.getSize(new THREE.Vector3());
-            am.mesh.position.x = size.x * 0.8;
-            am.mesh.position.y = size.y * 1.15; // On top of wings
-            am.mesh.position.z = am.part.includes('R') ? size.z * 1.8 : -size.z * 1.8;
+            const isRight = am.part.includes('R');
+            const ailBox = am.box;
+            
+            am.mesh.position.x = fuselageMaxX * 0.6;
+            am.mesh.position.y = -fuselageMinYPos + (ailBox.max.y - ailBox.min.y) * 0.7;
+            am.mesh.position.z = isRight ? -(fuselageMinZ) - (ailBox.max.z - ailBox.min.z) * 0.5 : -(fuselageMaxZ) + (ailBox.max.z - ailBox.min.z) * 0.5;
           });
 
-          // Position other parts (canopy, motor_holder, servo_holder, etc.) at front
+          // Position canopy and other parts near front
+          const otherMeshes = meshes.filter(m => !m.part.includes('Fus') && !m.part.includes('Wing') && !m.part.includes('HTP') && !m.part.includes('VTP') && !m.part.includes('Elev') && !m.part.includes('Rudder') && !m.part.includes('Aileron'));
           otherMeshes.forEach((om, idx) => {
-            const size = om.box.getSize(new THREE.Vector3());
+            const omBox = om.box;
             if (om.part.includes('Canopy')) {
-              om.mesh.position.set(-size.x * 0.5, size.y * 0.5, 0);
+              om.mesh.position.set(fuselageMinX * 0.7, -fuselageMinYPos - (omBox.max.y - omBox.min.y) * 0.5, 0);
             } else if (om.part.includes('Motor')) {
-              om.mesh.position.set(-size.x * 1.2, 0, 0);
+              om.mesh.position.set(fuselageMinX * 1.5, -fuselageMinYPos, 0);
             } else {
-              om.mesh.position.x = -size.x * (0.5 + idx * 0.3);
-              om.mesh.position.y = -size.y * 0.3;
+              om.mesh.position.x = fuselageMinX * (1.2 + idx * 0.3);
+              om.mesh.position.y = -fuselageMinYPos - (omBox.max.y - omBox.min.y) * 0.3;
             }
           });
         }
@@ -1885,7 +1880,7 @@
           const center = box.getCenter(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
           
-          // Position camera to frame plane (with initial rotation applied)
+          // Position camera to frame plane
           const fov = camera.fov * (Math.PI / 180);
           let distance = maxDim / 2 / Math.tan(fov / 2);
           distance *= 1.8;
