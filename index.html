@@ -97,6 +97,15 @@
     .summary-title { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
     .summary-text { font-size: 12px; line-height: 1.7; color: var(--ink); }
 
+    /* FOUNDER IMPACT */
+    .founder-panel { margin: 0 2.5rem; margin-top: 1rem; border: 1px solid var(--border); background: var(--card); padding: 1.3rem; }
+    .founder-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem; }
+    .founder-title { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+    .founder-badge { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.55rem; border: 1px solid var(--accent); color: var(--accent); }
+    .founder-text { font-size: 12.5px; color: var(--muted); line-height: 1.8; margin-bottom: 0.9rem; }
+    .founder-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .founder-metric { background: var(--bg); padding: 0.9rem; }
+
     /* FEATURED PROJECT */
     .featured-wrap { border: 1px solid var(--border); background: var(--card); padding: 2rem; display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; }
     .featured-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.6rem, 2.5vw, 2.2rem); line-height: 1.1; margin-bottom: 0.8rem; }
@@ -236,6 +245,8 @@
       .status-strip { padding-left: 1.25rem; padding-right: 1.25rem; }
       .summary-panel { margin-left: 1.25rem; margin-right: 1.25rem; }
       .summary-grid { grid-template-columns: 1fr; }
+      .founder-panel { margin-left: 1.25rem; margin-right: 1.25rem; }
+      .founder-metrics { grid-template-columns: 1fr; }
       .timeline-item { grid-template-columns: 1fr; }
       .timeline-date { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; flex-direction: row; align-items: center; gap: 0.75rem; }
       .pub-item { grid-template-columns: 1fr; }
@@ -339,6 +350,19 @@
         <p class="summary-title">Proof</p>
         <p class="summary-text">Led active rover and UAV projects, published research reports, and scaled a STEM organization to 90+ engaged members.</p>
       </div>
+    </div>
+  </div>
+
+  <div class="founder-panel reveal" id="founder-impact">
+    <div class="founder-head">
+      <p class="founder-title">Leadership Highlight</p>
+      <span class="founder-badge">Founder · NLC STEM Club</span>
+    </div>
+    <p class="founder-text">Founded the first campus-wide STEM organization at Northeast Lakeview College and built it into an active engineering community through technical workshops, project teams, and research-driven programming.</p>
+    <div class="founder-metrics">
+      <div class="founder-metric"><div class="metric-val">90+</div><div class="metric-label">Members Grown</div></div>
+      <div class="founder-metric"><div class="metric-val">2024</div><div class="metric-label">Club Founded</div></div>
+      <div class="founder-metric"><div class="metric-val">3</div><div class="metric-label">Major Research Initiatives</div></div>
     </div>
   </div>
 
@@ -545,7 +569,7 @@
       <div class="timeline-item reveal">
         <div class="timeline-date"><span class="timeline-date-year">2024</span><span>Jan – Present</span></div>
         <div class="timeline-body">
-          <p class="timeline-title">Founder &amp; President</p>
+          <p class="timeline-title">Founder, President &amp; Program Director — NLC STEM Club</p>
           <p class="timeline-org">NLC STEM Club · Northeast Lakeview College</p>
           <p class="timeline-desc">Founded the first campus-wide STEM organization at NLC. Grew the club to 90+ members through weekly technical workshops and industry guest lectures. Directed multiple engineering research initiatives including the fixed-wing UAV and SHM projects.</p>
         </div>
@@ -581,7 +605,7 @@
       </div>
       <div class="skill-group reveal">
         <p class="skill-group-title">Leadership</p>
-        <ul class="skill-list"><li>STEM Club Founder &amp; President</li><li>Cross-functional Team Lead</li><li>Sprint Planning</li><li>Research &amp; Technical Writing</li><li>Safety Training &amp; Compliance</li></ul>
+        <ul class="skill-list"><li>Founded &amp; Scaled NLC STEM Club (90+ Members)</li><li>Cross-functional Team Lead</li><li>Sprint Planning</li><li>Research &amp; Technical Writing</li><li>Safety Training &amp; Compliance</li></ul>
       </div>
     </div>
   </section>
