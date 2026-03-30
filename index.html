@@ -1037,8 +1037,8 @@
     let roverCanvas = null;
     let roverCtx = null;
     let roverFrame = null;
-    let roverYaw = -0.6;
-    let roverPitch = 0.28;
+    let roverYaw = -0.82;
+    let roverPitch = 0.24;
     let roverZoom = 720;
     let roverLastTs = 0;
     let roverAutoRotate = true;
@@ -1165,6 +1165,7 @@
       const wheelColor = '#2f333a';
       const accent = '#bcc2cb';
       const maroonAccent = '#7a1f1f';
+      const bracketColor = '#7c8594';
 
       // Chassis rails + cross members
       faces.push(...makeCuboid(0, -0.05, -1.05, 4.95, 0.25, 0.35, railColor));
@@ -1172,33 +1173,54 @@
       faces.push(...makeCuboid(-1.9, -0.02, 0, 0.3, 0.26, 2.35, frameColor));
       faces.push(...makeCuboid(0.0, -0.02, 0, 0.3, 0.26, 2.35, frameColor));
       faces.push(...makeCuboid(1.9, -0.02, 0, 0.3, 0.26, 2.35, frameColor));
+      faces.push(...makeCuboid(-2.2, -0.18, -1.08, 0.35, 0.16, 0.28, bracketColor));
+      faces.push(...makeCuboid(-2.2, -0.18, 1.08, 0.35, 0.16, 0.28, bracketColor));
+      faces.push(...makeCuboid(2.2, -0.18, -1.08, 0.35, 0.16, 0.28, bracketColor));
+      faces.push(...makeCuboid(2.2, -0.18, 1.08, 0.35, 0.16, 0.28, bracketColor));
 
-      // Top deck + electronics bay
-      faces.push(...makeCuboid(0.25, 0.32, 0, 2.7, 0.22, 1.85, '#b8bec8'));
-      faces.push(...makeCuboid(0.35, 0.63, 0.02, 1.9, 0.42, 1.25, accent));
+      // Top deck + motor/spectrometer boxes
+      faces.push(...makeCuboid(0.2, 0.3, 0, 2.8, 0.2, 1.9, '#b8bec8'));
+      faces.push(...makeCuboid(0.82, 0.58, -0.36, 0.95, 0.42, 0.72, '#9ca4b1'));
+      faces.push(...makeCuboid(0.82, 0.78, -0.36, 0.72, 0.12, 0.58, '#c5cad2'));
+      faces.push(...makeCuboid(0.02, 0.62, 0.34, 1.38, 0.42, 1.08, accent));
+      faces.push(...makeCuboid(0.02, 0.83, 0.34, 1.16, 0.1, 0.95, '#d2d6dd'));
+      faces.push(...makeCuboid(-0.45, 0.68, -0.82, 0.52, 0.26, 0.38, '#a5adba'));
+
+      // Elevator rails under spectrometer
+      faces.push(...makeCuboid(-0.5, 0.45, 0.62, 0.12, 0.62, 0.12, '#8d96a4'));
+      faces.push(...makeCuboid(0.5, 0.45, 0.62, 0.12, 0.62, 0.12, '#8d96a4'));
+      faces.push(...makeCuboid(0.0, 0.18, 0.62, 1.08, 0.1, 0.14, '#747d8d'));
+
+      // Accent side rails
       faces.push(...makeCuboid(0.1, 0.5, 0.98, 2.2, 0.1, 0.14, maroonAccent));
       faces.push(...makeCuboid(0.1, 0.5, -0.98, 2.2, 0.1, 0.14, maroonAccent));
 
       // Sensor mast + head
-      faces.push(...makeCuboid(-1.55, 0.72, 0, 0.34, 1.6, 0.34, '#c6cad1'));
-      faces.push(...makeCuboid(-1.55, 1.62, 0, 0.24, 0.36, 0.24, '#d8dbe1'));
-      faces.push(...makeCuboid(-1.35, 1.52, 0.0, 0.32, 0.14, 0.68, '#b0b7c2'));
-      faces.push(...makePrismY(-1.55, 1.0, 0, 1.75, 0.09, 12, '#9ea6b1'));
+      faces.push(...makeCuboid(-1.58, 0.74, 0, 0.32, 1.55, 0.32, '#c6cad1'));
+      faces.push(...makePrismY(-1.58, 1.0, 0, 1.72, 0.085, 12, '#9ea6b1'));
+      faces.push(...makeCuboid(-1.56, 1.6, 0.02, 0.26, 0.34, 0.26, '#d8dbe1'));
+      faces.push(...makeCuboid(-1.34, 1.5, 0.0, 0.36, 0.12, 0.72, '#b0b7c2'));
+      faces.push(...makePrismY(-1.72, 1.45, 0.22, 0.55, 0.03, 8, '#d4d8df'));
 
-      // Auger / drill assembly at front
-      faces.push(...makeCuboid(2.15, 0.18, 0, 0.6, 0.28, 0.8, darkMetal));
-      faces.push(...makePrismX(2.68, 0.15, 0, 1.25, 0.2, 12, '#757d89'));
-      faces.push(...makePrismX(3.25, 0.15, 0, 0.38, 0.1, 10, '#9299a4'));
-      faces.push(...makeCuboid(2.95, 0.38, 0, 0.22, 0.1, 0.22, '#666f7b'));
-      faces.push(...makeCuboid(2.45, 0.38, 0, 0.18, 0.5, 0.18, '#616a77'));
+      // Front motor box + auger/drill assembly
+      faces.push(...makeCuboid(2.0, 0.16, 0, 0.68, 0.3, 0.86, darkMetal));
+      faces.push(...makeCuboid(2.25, 0.42, 0, 0.2, 0.46, 0.2, '#616a77'));
+      faces.push(...makePrismX(2.7, 0.15, 0, 1.34, 0.2, 12, '#757d89'));
+      faces.push(...makePrismX(3.35, 0.15, 0, 0.44, 0.09, 10, '#9299a4'));
+      faces.push(...makePrismX(2.36, 0.15, 0, 0.24, 0.32, 14, '#5e6673'));
+
+      // Spur gear representation
+      faces.push(...makePrismX(2.3, 0.15, 0.36, 0.08, 0.16, 12, '#a4abb7'));
+      faces.push(...makePrismX(2.3, 0.15, -0.36, 0.08, 0.16, 12, '#a4abb7'));
 
       // Auger fins (simple helical-like stepped blades)
-      for (let i = 0; i < 5; i++) {
-        const t = i / 4;
-        const x = 2.35 + t * 0.75;
-        const z = Math.sin(t * Math.PI * 2) * 0.12;
-        faces.push(...makeCuboid(x, 0.15, z, 0.16, 0.3, 0.05, '#9aa1ac'));
-        faces.push(...makeCuboid(x, 0.15, -z, 0.16, 0.3, 0.05, '#9aa1ac'));
+      for (let i = 0; i < 7; i++) {
+        const t = i / 6;
+        const x = 2.18 + t * 1.0;
+        const z = Math.sin(t * Math.PI * 2.2) * 0.14;
+        const y = 0.15 + Math.cos(t * Math.PI * 1.8) * 0.03;
+        faces.push(...makeCuboid(x, y, z, 0.16, 0.34, 0.05, '#9aa1ac'));
+        faces.push(...makeCuboid(x, y, -z, 0.16, 0.34, 0.05, '#9aa1ac'));
       }
 
       // Side suspension arms
@@ -1206,6 +1228,10 @@
       faces.push(...makeCuboid(1.55, -0.35, -1.28, 0.95, 0.16, 0.16, '#7f8896'));
       faces.push(...makeCuboid(-1.55, -0.35, 1.28, 0.95, 0.16, 0.16, '#7f8896'));
       faces.push(...makeCuboid(1.55, -0.35, 1.28, 0.95, 0.16, 0.16, '#7f8896'));
+      faces.push(...makeCuboid(-2.1, -0.34, -1.32, 0.26, 0.2, 0.26, '#6d7684'));
+      faces.push(...makeCuboid(-2.1, -0.34, 1.32, 0.26, 0.2, 0.26, '#6d7684'));
+      faces.push(...makeCuboid(2.1, -0.34, -1.32, 0.26, 0.2, 0.26, '#6d7684'));
+      faces.push(...makeCuboid(2.1, -0.34, 1.32, 0.26, 0.2, 0.26, '#6d7684'));
 
       // Wheels (round)
       const wheelPositions = [
