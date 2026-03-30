@@ -891,9 +891,8 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
   <script>
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
@@ -1035,80 +1034,85 @@
     // Rover model modal
     const modelModal = document.getElementById('model-modal');
     let roverViewerInitialized = false;
-    let roverRenderer = null;
+    let roverEngine = null;
     let roverScene = null;
     let roverCamera = null;
-    let roverControls = null;
-    let roverRenderLoop = null;
+    let roverCanvas = null;
 
     function resizeRoverViewer() {
-      const viewerHost = document.getElementById('rover-model-viewer');
-      if (!viewerHost || !roverRenderer || !roverCamera) return;
-      const w = viewerHost.clientWidth || 1;
-      const h = viewerHost.clientHeight || 1;
-      roverRenderer.setSize(w, h, false);
-      roverCamera.aspect = w / h;
-      roverCamera.updateProjectionMatrix();
+      if (roverEngine) roverEngine.resize();
     }
 
     function initRoverViewer() {
       if (roverViewerInitialized) return;
       const statusEl = document.getElementById('rover-model-status');
       const viewerHost = document.getElementById('rover-model-viewer');
-      if (!viewerHost || typeof THREE === 'undefined' || !THREE.OBJLoader || !THREE.OrbitControls) {
-        if (statusEl) statusEl.textContent = '3D preview unavailable in this browser. Use Open links below.';
+      if (!viewerHost || typeof BABYLON === 'undefined') {
+        if (statusEl) statusEl.textContent = '3D preview unavailable right now. Use Open links below.';
         return;
       }
 
-      roverScene = new THREE.Scene();
-      roverCamera = new THREE.PerspectiveCamera(48, 1, 0.1, 1000);
-      roverCamera.position.set(2.8, 2.2, 3.6);
+      roverCanvas = document.createElement('canvas');
+      roverCanvas.style.width = '100%';
+      roverCanvas.style.height = '100%';
+      roverCanvas.style.display = 'block';
+      viewerHost.appendChild(roverCanvas);
 
-      roverRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      roverRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      viewerHost.appendChild(roverRenderer.domElement);
+      roverEngine = new BABYLON.Engine(roverCanvas, true, { preserveDrawingBuffer: true, stencil: true });
+      roverScene = new BABYLON.Scene(roverEngine);
+      roverScene.clearColor = new BABYLON.Color4(0.16, 0.13, 0.13, 1);
 
-      roverControls = new THREE.OrbitControls(roverCamera, roverRenderer.domElement);
-      roverControls.enableDamping = true;
-      roverControls.dampingFactor = 0.06;
-      roverControls.target.set(0, 0, 0);
+      roverCamera = new BABYLON.ArcRotateCamera('roverCam', -Math.PI / 2, Math.PI / 2.4, 8, BABYLON.Vector3.Zero(), roverScene);
+      roverCamera.attachControl(roverCanvas, true);
+      roverCamera.wheelDeltaPercentage = 0.01;
+      roverCamera.lowerRadiusLimit = 1;
+      roverCamera.upperRadiusLimit = 30;
 
-      roverScene.add(new THREE.AmbientLight(0xffffff, 0.75));
-      const keyLight = new THREE.DirectionalLight(0xffffff, 0.95);
-      keyLight.position.set(3, 4, 5);
-      roverScene.add(keyLight);
-      const fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
-      fillLight.position.set(-3, 2, -2);
-      roverScene.add(fillLight);
+      new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), roverScene).intensity = 0.9;
+      const dirLight = new BABYLON.DirectionalLight('dir', new BABYLON.Vector3(-1, -2, -1), roverScene);
+      dirLight.position = new BABYLON.Vector3(5, 8, 5);
+      dirLight.intensity = 0.7;
 
-      const loader = new THREE.OBJLoader();
-      loader.load(
-        'MainAssem.obj',
-        (obj) => {
-          const box = new THREE.Box3().setFromObject(obj);
-          const center = box.getCenter(new THREE.Vector3());
-          const size = box.getSize(new THREE.Vector3());
-          obj.position.sub(center);
+      BABYLON.SceneLoader.Append('', 'MainAssem.obj', roverScene, () => {
+        const meshes = roverScene.meshes.filter(m => m && m.getTotalVertices && m.getTotalVertices() > 0);
+        if (meshes.length) {
+          let min = new BABYLON.Vector3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
+          let max = new BABYLON.Vector3(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY);
+
+          meshes.forEach(mesh => {
+            const box = mesh.getBoundingInfo().boundingBox;
+            min = BABYLON.Vector3.Minimize(min, box.minimumWorld);
+            max = BABYLON.Vector3.Maximize(max, box.maximumWorld);
+            if (!mesh.material) {
+              const mat = new BABYLON.StandardMaterial('roverMat', roverScene);
+              mat.diffuseColor = new BABYLON.Color3(0.82, 0.82, 0.84);
+              mat.specularColor = new BABYLON.Color3(0.15, 0.15, 0.15);
+              mesh.material = mat;
+            }
+          });
+
+          const center = min.add(max).scale(0.5);
+          const size = max.subtract(min);
           const maxDim = Math.max(size.x, size.y, size.z) || 1;
-          const scale = 2.7 / maxDim;
-          obj.scale.setScalar(scale);
-          roverScene.add(obj);
-          if (statusEl) statusEl.textContent = 'Drag to rotate · Scroll to zoom';
-        },
-        undefined,
-        () => {
-          if (statusEl) statusEl.textContent = 'Could not load 3D preview. Use Open links below.';
+          const scale = 4 / maxDim;
+
+          meshes.forEach(mesh => {
+            mesh.position = mesh.position.subtract(center);
+            mesh.scaling = mesh.scaling.scale(scale);
+          });
+
+          roverCamera.radius = 7;
+          roverCamera.target = BABYLON.Vector3.Zero();
         }
-      );
+        if (statusEl) statusEl.textContent = 'Drag to rotate · Scroll to zoom';
+      }, undefined, (_scene, message) => {
+        if (statusEl) statusEl.textContent = `3D preview failed (${message || 'load error'}). Use Open links below.`;
+      });
 
-      function renderFrame() {
-        if (roverControls) roverControls.update();
-        if (roverRenderer && roverScene && roverCamera) roverRenderer.render(roverScene, roverCamera);
-        roverRenderLoop = requestAnimationFrame(renderFrame);
-      }
+      roverEngine.runRenderLoop(() => {
+        if (roverScene) roverScene.render();
+      });
 
-      resizeRoverViewer();
-      renderFrame();
       roverViewerInitialized = true;
       window.addEventListener('resize', resizeRoverViewer);
     }
