@@ -18,7 +18,7 @@
   <style>
     :root {
       --bg: #f5f4f0; --ink: #1a1a18; --accent: #c8441a;
-      --muted: #9a9990; --card: #eeecea; --border: #d8d6d0; --tag-bg: #e8e6e1;
+      --muted: #9a9990; --card: #eeecea; --border: #d8d6d0; --tag-bg: #e8e6e1; --cta-h: 42px;
     }
     [data-theme="dark"] {
       --bg: #111110; --ink: #e8e6e0; --accent: #e05a2b;
@@ -29,7 +29,11 @@
     body { background: var(--bg); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.6; min-height: 100vh; transition: background 0.3s, color 0.3s; }
 
     /* HEADER */
-    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2.5rem; background: var(--bg); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s, background 0.3s; gap: 1rem; }
+    .top-cta-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 115; height: var(--cta-h); border-bottom: 1px solid var(--border); background: var(--card); display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.45rem 1rem; }
+    .top-cta-bar a { text-decoration: none; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); border: 1px solid var(--border); padding: 0.35rem 0.7rem; background: var(--bg); transition: border-color 0.2s, color 0.2s; }
+    .top-cta-bar a:hover { border-color: var(--accent); color: var(--accent); }
+    .top-cta-bar .primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    header { position: fixed; top: var(--cta-h); left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2.5rem; background: var(--bg); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s, background 0.3s; gap: 1rem; }
     header.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
     .logo { font-family: 'DM Serif Display', serif; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; white-space: nowrap; }
     .header-right { display: flex; align-items: center; gap: 0.25rem; flex-wrap: nowrap; }
@@ -43,13 +47,13 @@
     .btn-theme { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 15px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s, color 0.2s; flex-shrink: 0; }
     .btn-theme:hover { color: var(--ink); border-color: var(--ink); }
     .hamburger { display: none; background: none; border: 1px solid var(--border); color: var(--muted); width: 32px; height: 32px; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0; }
-    .mobile-nav { display: none; position: fixed; top: 57px; left: 0; right: 0; z-index: 99; background: var(--bg); border-bottom: 1px solid var(--border); flex-direction: column; padding: 1rem 1.5rem; gap: 0; }
+    .mobile-nav { display: none; position: fixed; top: calc(var(--cta-h) + 57px); left: 0; right: 0; z-index: 99; background: var(--bg); border-bottom: 1px solid var(--border); flex-direction: column; padding: 1rem 1.5rem; gap: 0; }
     .mobile-nav.open { display: flex; }
     .mobile-nav a { text-decoration: none; color: var(--muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
     .mobile-nav a:last-child { border-bottom: none; }
 
     /* HERO */
-    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 8rem 2.5rem 4rem; border-bottom: 1px solid var(--border); gap: 4rem; background: linear-gradient(135deg, rgba(200,68,26,0.05) 0%, rgba(224,90,43,0.05) 100%), var(--bg); position: relative; overflow: hidden; }
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: calc(8rem + var(--cta-h)) 2.5rem 4rem; border-bottom: 1px solid var(--border); gap: 4rem; background: linear-gradient(135deg, rgba(200,68,26,0.05) 0%, rgba(224,90,43,0.05) 100%), var(--bg); position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; top: 0; right: -200px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(200,68,26,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
     .hero::after { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px); background-size: 32px 32px; opacity: 0.3; pointer-events: none; }
     .hero-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; transform: translateY(12px); animation: rise 0.6s 0.2s forwards; }
@@ -88,6 +92,42 @@
     /* STATUS STRIP */
     .status-strip { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 2.5rem; border-bottom: 1px solid var(--border); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
     .status-dot { color: var(--accent); font-size: 10px; }
+    .now-next-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+    .now-next-item { background: var(--bg); padding: 0.8rem 2.5rem; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); }
+    .now-next-item strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.09em; font-size: 10px; margin-right: 0.4rem; }
+    .status-system { display: flex; align-items: center; gap: 0.45rem; padding: 0.8rem 2.5rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .status-badge { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1px solid var(--border); color: var(--muted); background: var(--tag-bg); }
+    .status-badge.active { color: #5a8a3a; border-color: #5a8a3a; }
+    .status-badge.completed { color: var(--muted); }
+    .status-badge.testing { color: #4a7a9d; border-color: #4a7a9d; }
+
+    .jump-nav { position: fixed; right: 1rem; top: calc(var(--cta-h) + 86px); z-index: 90; border: 1px solid var(--border); background: var(--bg); display: flex; flex-direction: column; }
+    .jump-nav a { text-decoration: none; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0.45rem 0.65rem; border-bottom: 1px solid var(--border); transition: color 0.2s, background 0.2s; }
+    .jump-nav a:last-child { border-bottom: none; }
+    .jump-nav a:hover { color: var(--accent); background: var(--tag-bg); }
+
+    .media-strip { margin-top: 1rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .media-tile { background: var(--bg); aspect-ratio: 4/3; overflow: hidden; position: relative; }
+    .media-tile img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.92); }
+    .media-tile .tile-cap { position: absolute; bottom: 0; left: 0; right: 0; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.9); background: linear-gradient(transparent, rgba(0,0,0,0.65)); padding: 0.35rem 0.45rem; }
+
+    .quote-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; border: 1px solid var(--border); background: var(--border); }
+    .quote-card { background: var(--bg); padding: 1.2rem; }
+    .quote-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 0.8rem; }
+    .quote-meta { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); }
+
+    .faq-list { border: 1px solid var(--border); background: var(--border); display: grid; gap: 1px; }
+    .faq-item { background: var(--bg); padding: 1rem 1.1rem; }
+    .faq-q { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.45rem; }
+    .faq-a { font-size: 12px; color: var(--muted); line-height: 1.75; }
+
+    .docs-list { border: 1px solid var(--border); background: var(--border); display: grid; gap: 1px; margin-bottom: 1rem; }
+    .doc-item { background: var(--bg); padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+    .doc-name { font-size: 11px; letter-spacing: 0.05em; color: var(--ink); }
+    .doc-open { text-decoration: none; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 0.25rem 0.55rem; }
+    .doc-open:hover { color: var(--accent); border-color: var(--accent); }
+    .photo-grid-all { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .photo-grid-all img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: var(--card); }
 
     /* RECRUITER SUMMARY */
     .summary-panel { margin: 0 2.5rem; margin-top: 1.25rem; border: 1px solid var(--border); background: var(--card); padding: 1.4rem; }
@@ -237,12 +277,16 @@
     /* RESPONSIVE */
     @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } .hero-right { display: none; } .featured-wrap { grid-template-columns: 1fr; } }
     @media (max-width: 680px) {
+      .top-cta-bar { justify-content: flex-start; overflow-x: auto; }
       header { padding: 0.85rem 1.25rem; }
       nav, .btn-resume { display: none; }
       .hamburger { display: flex; }
       .hero, .section { padding-left: 1.25rem; padding-right: 1.25rem; }
       .hero { padding-top: 6rem; }
       .status-strip { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .now-next-strip { grid-template-columns: 1fr; }
+      .now-next-item { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .status-system { padding-left: 1.25rem; padding-right: 1.25rem; }
       .summary-panel { margin-left: 1.25rem; margin-right: 1.25rem; }
       .summary-grid { grid-template-columns: 1fr; }
       .founder-panel { margin-left: 1.25rem; margin-right: 1.25rem; }
@@ -250,6 +294,9 @@
       .timeline-item { grid-template-columns: 1fr; }
       .timeline-date { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; flex-direction: row; align-items: center; gap: 0.75rem; }
       .pub-item { grid-template-columns: 1fr; }
+      .quote-grid { grid-template-columns: 1fr; }
+      .media-strip { grid-template-columns: repeat(2, 1fr); }
+      .jump-nav { display: none; }
       footer { padding: 1.25rem; }
     }
     @media (max-width: 480px) {
@@ -260,6 +307,12 @@
   </style>
 </head>
 <body>
+
+  <div class="top-cta-bar">
+    <a class="primary" href="mailto:hkaleb290@gmail.com?subject=Book%20a%20Chat%20-%20Kaleb%20Harris" data-track="top_book_chat">Book a Chat</a>
+    <a href="Kaleb_Harris_Resume_Master.pdf" download data-track="top_download_resume">Download Resume</a>
+    <a href="mailto:hkaleb290@gmail.com" data-track="top_email">Email</a>
+  </div>
 
   <header id="site-header">
     <a class="logo" href="#">Kaleb Harris</a>
@@ -293,6 +346,15 @@
     <a href="#skills" onclick="closeMobileNav()">Skills</a>
     <a href="#contact" onclick="closeMobileNav()">Contact</a>
   </div>
+
+  <aside class="jump-nav" aria-label="Jump to section">
+    <a href="#featured">Jump: Featured</a>
+    <a href="#projects">Jump: Projects</a>
+    <a href="#publications">Jump: Research</a>
+    <a href="#assets">Jump: Docs/Photos</a>
+    <a href="#experience">Jump: Background</a>
+    <a href="#contact">Jump: Contact</a>
+  </aside>
 
   <!-- HERO -->
   <section class="hero">
@@ -332,9 +394,15 @@
     </div>
   </section>
 
-  <div class="status-strip" id="building">
-    <span class="status-dot">●</span>
-    <span>Currently Building · March 2026 · DIRT Rover autonomy test scenarios + sensor fusion validation</span>
+  <div class="now-next-strip" id="building">
+    <div class="now-next-item"><strong>Now</strong> Building DIRT Rover autonomy test scenarios and sensor fusion validation.</div>
+    <div class="now-next-item"><strong>Next</strong> Milestone: complete field-validation runbook and publish April 2026 test summary.</div>
+  </div>
+
+  <div class="status-system" aria-label="Project status system">
+    <span class="status-badge active">Active</span>
+    <span class="status-badge completed">Completed</span>
+    <span class="status-badge testing">In Testing</span>
   </div>
 
   <div class="summary-panel reveal" id="recruiter-summary">
@@ -369,11 +437,26 @@
     </div>
   </div>
 
+  <section class="section" id="quotes">
+    <p class="section-label">Team Quotes</p>
+    <div class="quote-grid reveal">
+      <article class="quote-card">
+        <p class="quote-text">“Just ask me and I can take you.”</p>
+        <p class="quote-meta">Aiden Ware Bosanko · Team Chat Coordination · Discord</p>
+      </article>
+      <article class="quote-card">
+        <p class="quote-text">“Are y’all ready for the meeting, staff?”</p>
+        <p class="quote-meta">Kaleb Harris · Weekly Staff Coordination · Discord</p>
+      </article>
+    </div>
+  </section>
+
   <section class="section" id="featured">
     <p class="section-label">Featured Project</p>
     <div class="featured-wrap reveal">
       <div>
         <p class="featured-subtitle">DIRT Rover · Autonomous Soil Intelligence Platform</p>
+        <span class="status-badge testing">In Testing</span>
         <h2 class="featured-title">From open-field uncertainty to reliable autonomous soil analysis.</h2>
         <div class="featured-flow">
           <div class="featured-block">
@@ -401,6 +484,12 @@
   <!-- PROJECTS -->
   <section class="section" id="projects">
     <p class="section-label">Engineering Projects</p>
+    <div class="media-strip reveal">
+      <div class="media-tile"><img src="uav_photo_1.jpg" alt="UAV media 1"><span class="tile-cap">Build Photo 01</span></div>
+      <div class="media-tile"><img src="uav_photo_2.jpg" alt="UAV media 2"><span class="tile-cap">Build Photo 02</span></div>
+      <div class="media-tile"><img src="uav_photo_3.jpg" alt="UAV media 3"><span class="tile-cap">Build Photo 03</span></div>
+      <a class="media-tile" href="aerospace_report (3).pdf" target="_blank"><img src="uav_photo_4.jpg" alt="UAV report thumbnail"><span class="tile-cap">UAV Report</span></a>
+    </div>
     <div class="projects-grid">
 
       <div class="project-card reveal" style="cursor: pointer;" onclick="showCaseStudy('dirt-rover')">
@@ -466,6 +555,12 @@
   <!-- PUBLICATIONS -->
   <section class="section" id="publications">
     <p class="section-label">Research &amp; Publications</p>
+    <div class="media-strip reveal">
+      <div class="media-tile"><img src="uav_photo_4.jpg" alt="Research media 1"><span class="tile-cap">Research Build</span></div>
+      <div class="media-tile"><img src="uav_photo_5.jpg" alt="Research media 2"><span class="tile-cap">Instrumentation</span></div>
+      <div class="media-tile"><img src="uav_photo_6.jpg" alt="Research media 3"><span class="tile-cap">Assembly Stage</span></div>
+      <a class="media-tile" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank"><img src="uav_photo_1.jpg" alt="SHM report thumbnail"><span class="tile-cap">SHM Report</span></a>
+    </div>
     <div class="pub-list">
       <div class="pub-item reveal">
         <div>
@@ -522,6 +617,31 @@
     </p>
   </section>
 
+  <section class="section" id="assets">
+    <p class="section-label">All Docs &amp; Photos</p>
+    <div class="docs-list reveal">
+      <article class="doc-item"><span class="doc-name">Kaleb_Harris_Resume_Master.pdf</span><a class="doc-open" href="Kaleb_Harris_Resume_Master.pdf" target="_blank">Open</a></article>
+      <article class="doc-item"><span class="doc-name">aerospace_report (3).pdf</span><a class="doc-open" href="aerospace_report (3).pdf" target="_blank">Open</a></article>
+      <article class="doc-item"><span class="doc-name">Piezoelectric_Structural_Health_Monitoring_-compressed.pdf</span><a class="doc-open" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank">Open</a></article>
+      <article class="doc-item"><span class="doc-name">NLC_Stem_Club_Constitution.docx</span><a class="doc-open" href="NLC_Stem_Club_Constitution.docx" target="_blank">Open</a></article>
+    </div>
+    <div class="photo-grid-all reveal">
+      <img src="uav_photo_1.jpg" alt="uav photo 1"/>
+      <img src="uav_photo_2.jpg" alt="uav photo 2"/>
+      <img src="uav_photo_3.jpg" alt="uav photo 3"/>
+      <img src="uav_photo_4.jpg" alt="uav photo 4"/>
+      <img src="uav_photo_5.jpg" alt="uav photo 5"/>
+      <img src="uav_photo_6.jpg" alt="uav photo 6"/>
+      <img src="1500.png" alt="1500 photo"/>
+      <img src="1500%20(1).png" alt="1500 photo 1"/>
+      <img src="1500%20(2).png" alt="1500 photo 2"/>
+      <img src="1500%20(3).png" alt="1500 photo 3"/>
+      <img src="1500%20(4).png" alt="1500 photo 4"/>
+      <img src="1500%20(5).png" alt="1500 photo 5"/>
+      <img src="1500%20(6).png" alt="1500 photo 6"/>
+    </div>
+  </section>
+
   <div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
     <button class="lightbox-close" onclick="closeLightbox()">✕</button>
     <img id="lightbox-img" src="" alt=""/>
@@ -531,6 +651,12 @@
   <!-- EXPERIENCE -->
   <section class="section" id="experience">
     <p class="section-label">Background</p>
+    <div class="media-strip reveal">
+      <div class="media-tile"><img src="uav_photo_2.jpg" alt="Background media 1"><span class="tile-cap">Workshop</span></div>
+      <div class="media-tile"><img src="uav_photo_3.jpg" alt="Background media 2"><span class="tile-cap">Team Build</span></div>
+      <div class="media-tile"><img src="uav_photo_5.jpg" alt="Background media 3"><span class="tile-cap">Field Prep</span></div>
+      <a class="media-tile" href="aerospace_report (3).pdf" target="_blank"><img src="uav_photo_6.jpg" alt="Background report thumbnail"><span class="tile-cap">Project Report</span></a>
+    </div>
     <div class="timeline">
 
       <div class="timeline-item reveal">
@@ -613,6 +739,28 @@
     </div>
   </section>
 
+  <section class="section" id="faq">
+    <p class="section-label">FAQ</p>
+    <div class="faq-list reveal">
+      <article class="faq-item">
+        <p class="faq-q">Internships</p>
+        <p class="faq-a">Open to Summer and Fall internship opportunities in robotics, autonomous systems, embedded software, and mechanical systems integration.</p>
+      </article>
+      <article class="faq-item">
+        <p class="faq-q">Availability</p>
+        <p class="faq-a">Available for interviews and project conversations weekly; best response channel is email.</p>
+      </article>
+      <article class="faq-item">
+        <p class="faq-q">Location</p>
+        <p class="faq-a">Based in Saint Hedwig, Texas, and open to relocation for the right engineering internship role.</p>
+      </article>
+      <article class="faq-item">
+        <p class="faq-q">Transfer Timeline</p>
+        <p class="faq-a">Completing A.S. Engineering at NLC in May 2026 and transferring to Texas A&amp;M University for Fall 2026 (Class of 2028).</p>
+      </article>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section class="section" id="contact">
     <p class="section-label">Get in touch</p>
@@ -649,6 +797,7 @@
     </div>
     <div style="text-align: right;">
       <p style="margin-bottom: 0.5rem;">Portfolio v2.0</p>
+      <p style="margin-bottom: 0.5rem;">Last updated: <span id="last-updated"></span></p>
       <a href="https://github.com/hkaleb290-creator/Portfolio-" target="_blank" style="color: var(--muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--muted)'">View Source Code →</a>
     </div>
   </footer>
@@ -826,6 +975,12 @@
         trackEvent(el.getAttribute('data-track'));
       });
     });
+
+    const updatedEl = document.getElementById('last-updated');
+    if (updatedEl) {
+      const d = new Date(document.lastModified);
+      updatedEl.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
   </script>
 
 </body>

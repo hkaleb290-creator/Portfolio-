@@ -15,11 +15,25 @@
       --card: #eeecea;
       --border: #d8d6d0;
       --tag-bg: #e8e6e1;
+      --cta-h: 42px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg); color: var(--ink); font-family: 'DM Mono', monospace; line-height: 1.7; }
-    .shell { max-width: 1180px; margin: 0 auto; padding: 1.2rem 1.2rem 3rem; }
+    .shell { max-width: 1180px; margin: 0 auto; padding: calc(1.2rem + var(--cta-h)) 1.2rem 3rem; }
+
+    .top-cta-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      height: var(--cta-h); border-bottom: 1px solid var(--border); background: var(--card);
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.45rem 1rem;
+    }
+    .top-cta-bar a {
+      text-decoration: none; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--ink); border: 1px solid var(--border); padding: 0.35rem 0.7rem; background: var(--bg);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .top-cta-bar a:hover { border-color: var(--accent); color: var(--accent); }
+    .top-cta-bar .primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 
     .topbar {
       display: flex; justify-content: space-between; align-items: center; gap: 0.8rem;
@@ -27,6 +41,18 @@
       position: sticky; top: 0.5rem; z-index: 10; backdrop-filter: blur(3px); margin-bottom: 1rem;
     }
     .title { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+    .jump-nav {
+      position: fixed; right: 1rem; top: calc(var(--cta-h) + 5.7rem); z-index: 12;
+      border: 1px solid var(--border); background: var(--bg); display: flex; flex-direction: column;
+    }
+    .jump-nav a {
+      text-decoration: none; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); padding: 0.45rem 0.65rem; border-bottom: 1px solid var(--border);
+      transition: color 0.2s, background 0.2s;
+    }
+    .jump-nav a:last-child { border-bottom: none; }
+    .jump-nav a:hover { color: var(--accent); background: var(--tag-bg); }
 
     .btn {
       display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;
@@ -62,6 +88,21 @@
     .section { border: 1px solid var(--border); background: var(--bg); margin-top: 1rem; }
     .section-head { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 0.8rem; }
     .section-head::after { content: ''; height: 1px; background: var(--border); flex: 1; }
+
+    .now-next-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 1rem; }
+    .now-next-item { background: #fff; padding: 0.8rem 1rem; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); }
+    .now-next-item strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.09em; font-size: 10px; margin-right: 0.35rem; }
+
+    .status-system { display: flex; align-items: center; gap: 0.45rem; padding: 0.8rem 1rem; border: 1px solid var(--border); border-top: none; flex-wrap: wrap; }
+    .status-badge { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1px solid var(--border); color: var(--muted); background: var(--tag-bg); }
+    .status-badge.active { color: #5a8a3a; border-color: #5a8a3a; }
+    .status-badge.completed { color: var(--muted); }
+    .status-badge.testing { color: #4a7a9d; border-color: #4a7a9d; }
+
+    .media-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin: 1rem; }
+    .media-tile { background: #fff; aspect-ratio: 4/3; overflow: hidden; position: relative; }
+    .media-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .media-tile .tile-cap { position: absolute; bottom: 0; left: 0; right: 0; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.9); background: linear-gradient(transparent, rgba(0,0,0,0.65)); padding: 0.35rem 0.45rem; }
 
     .results-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); }
     .result { background: #fff; padding: 1rem; transition: background 0.2s, transform 0.2s; }
@@ -104,8 +145,23 @@
     .point .p-num { font-family: 'DM Serif Display', serif; font-size: 1.9rem; line-height: 1; margin-bottom: 0.25rem; }
     .point .p-copy { font-size: 12px; color: #4a4843; }
 
-    .quotes { padding: 1rem; display: grid; gap: 0.7rem; }
-    .quote-note { border: 1px dashed var(--border); background: #fff; padding: 0.9rem; font-size: 12px; color: var(--muted); }
+    .quotes { padding: 1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--border); }
+    .quote-card { background: #fff; padding: 1rem; }
+    .quote-text { font-size: 12px; color: #4a4843; line-height: 1.8; margin-bottom: 0.7rem; }
+    .quote-meta { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); }
+
+    .faq-list { margin: 1rem; margin-top: 0; border: 1px solid var(--border); background: var(--border); display: grid; gap: 1px; }
+    .faq-item { background: #fff; padding: 0.95rem; }
+    .faq-q { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+    .faq-a { font-size: 12px; color: #4a4843; }
+
+    .docs-list { margin: 1rem; border: 1px solid var(--border); background: var(--border); display: grid; gap: 1px; }
+    .doc-item { background: #fff; padding: 0.85rem 0.95rem; display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+    .doc-name { font-size: 11px; letter-spacing: 0.05em; color: var(--ink); }
+    .doc-open { text-decoration: none; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 0.25rem 0.55rem; }
+    .doc-open:hover { color: var(--accent); border-color: var(--accent); }
+    .photo-grid-all { margin: 1rem; margin-top: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .photo-grid-all img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
 
     .foot { margin-top: 1rem; border: 1px solid var(--border); background: var(--card); padding: 0.85rem 1rem; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
 
@@ -116,16 +172,39 @@
       .hero { grid-template-columns: 1fr; }
       .results-strip { grid-template-columns: repeat(2, 1fr); }
       .cases { grid-template-columns: 1fr; }
+      .quotes { grid-template-columns: 1fr; }
     }
     @media (max-width: 620px) {
       .shell { padding-left: 0.85rem; padding-right: 0.85rem; }
       .growth-points { grid-template-columns: 1fr; }
       .snapshot { grid-template-columns: 1fr; }
       .results-strip { grid-template-columns: 1fr; }
+      .now-next-strip { grid-template-columns: 1fr; }
+      .media-strip { margin: 0.85rem; grid-template-columns: repeat(2, 1fr); }
+      .faq-list { margin: 0.85rem; margin-top: 0; }
+      .docs-list { margin: 0.85rem; }
+      .photo-grid-all { margin: 0.85rem; margin-top: 0; }
+      .top-cta-bar { justify-content: flex-start; overflow-x: auto; }
+      .jump-nav { display: none; }
     }
   </style>
 </head>
 <body>
+  <div class="top-cta-bar">
+    <a class="primary" href="mailto:hkaleb290@gmail.com?subject=Book%20a%20Chat%20-%20Kaleb%20Harris" data-track="top_book_chat">Book a Chat</a>
+    <a href="Kaleb_Harris_Resume_Master.pdf" download data-track="top_download_resume">Download Resume</a>
+    <a href="mailto:hkaleb290@gmail.com" data-track="top_email">Email</a>
+  </div>
+
+  <aside class="jump-nav" aria-label="Jump to section">
+    <a href="#results">Jump: Results</a>
+    <a href="#cases">Jump: Cases</a>
+    <a href="#growth">Jump: Timeline</a>
+    <a href="#social-proof">Jump: Quotes</a>
+    <a href="#assets">Jump: Docs/Photos</a>
+    <a href="#faq">Jump: FAQ</a>
+  </aside>
+
   <main class="shell">
     <div class="topbar">
       <p class="title">NLC STEM Club Impact Page</p>
@@ -135,7 +214,17 @@
       </div>
     </div>
 
-    <section class="hero reveal">
+    <div class="now-next-strip">
+      <div class="now-next-item"><strong>Now</strong> Running weekly project sprints, advisor coordination, and build support for current research teams.</div>
+      <div class="now-next-item"><strong>Next</strong> Milestone: expand industry-facing demos and lock in the next formal publication cycle.</div>
+    </div>
+    <div class="status-system" aria-label="Project status system">
+      <span class="status-badge active">Active</span>
+      <span class="status-badge completed">Completed</span>
+      <span class="status-badge testing">In Testing</span>
+    </div>
+
+    <section class="hero reveal" id="hero">
       <div class="hero-main">
         <p class="eyebrow">Northeast Lakeview College</p>
         <h1>Founded and Scaled:<br/>NLC STEM Club</h1>
@@ -161,8 +250,14 @@
       </aside>
     </section>
 
-    <section class="section reveal">
+    <section class="section reveal" id="results">
       <p class="section-head">Results</p>
+      <div class="media-strip">
+        <div class="media-tile"><img src="uav_photo_1.jpg" alt="Results photo 1"><span class="tile-cap">Club Build 01</span></div>
+        <div class="media-tile"><img src="uav_photo_2.jpg" alt="Results photo 2"><span class="tile-cap">Club Build 02</span></div>
+        <div class="media-tile"><img src="uav_photo_3.jpg" alt="Results photo 3"><span class="tile-cap">Club Build 03</span></div>
+        <a class="media-tile" href="aerospace_report (3).pdf" target="_blank"><img src="uav_photo_4.jpg" alt="UAV report thumbnail"><span class="tile-cap">UAV Report</span></a>
+      </div>
       <div class="results-strip">
         <div class="result"><p class="num" data-count="90" data-suffix="+">0</p><p class="label">Members Grown</p></div>
         <div class="result"><p class="num" data-count="3">0</p><p class="label">Projects Shipped</p></div>
@@ -177,12 +272,18 @@
       </div>
     </section>
 
-    <section class="section reveal">
+    <section class="section reveal" id="cases">
       <p class="section-head">Mini Case Studies</p>
+      <div class="media-strip">
+        <div class="media-tile"><img src="uav_photo_3.jpg" alt="Case photo 1"><span class="tile-cap">Flight Build</span></div>
+        <div class="media-tile"><img src="uav_photo_4.jpg" alt="Case photo 2"><span class="tile-cap">Sensor Setup</span></div>
+        <div class="media-tile"><img src="uav_photo_5.jpg" alt="Case photo 3"><span class="tile-cap">System Test</span></div>
+        <a class="media-tile" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank"><img src="uav_photo_6.jpg" alt="SHM report thumbnail"><span class="tile-cap">SHM Report</span></a>
+      </div>
       <div class="cases">
         <article class="case">
           <p class="case-title">Fixed-Wing Environmental UAV</p>
-          <p class="case-meta">Research Initiative</p>
+          <p class="case-meta">Research Initiative · <span class="status-badge completed">Completed</span></p>
           <p style="font-size:12.5px;color:#4a4843;">Multi-team aerospace build focused on additive manufacturing and environmental sensing.</p>
           <details class="case-flow">
             <summary>Challenge · Build · Outcome</summary>
@@ -195,7 +296,7 @@
         </article>
         <article class="case">
           <p class="case-title">Piezoelectric SHM System</p>
-          <p class="case-meta">Research Initiative</p>
+          <p class="case-meta">Research Initiative · <span class="status-badge completed">Completed</span></p>
           <p style="font-size:12.5px;color:#4a4843;">Real-time bridge model monitoring via DAQ and sensor instrumentation.</p>
           <details class="case-flow">
             <summary>Challenge · Build · Outcome</summary>
@@ -209,8 +310,14 @@
       </div>
     </section>
 
-    <section class="section reveal">
+    <section class="section reveal" id="growth">
       <p class="section-head">Growth Timeline (Launch → Now)</p>
+      <div class="media-strip">
+        <div class="media-tile"><img src="uav_photo_2.jpg" alt="Timeline photo 1"><span class="tile-cap">Launch Phase</span></div>
+        <div class="media-tile"><img src="uav_photo_4.jpg" alt="Timeline photo 2"><span class="tile-cap">Mid Build</span></div>
+        <div class="media-tile"><img src="uav_photo_6.jpg" alt="Timeline photo 3"><span class="tile-cap">Current Stage</span></div>
+        <a class="media-tile" href="aerospace_report (3).pdf" target="_blank"><img src="uav_photo_1.jpg" alt="Timeline report thumbnail"><span class="tile-cap">Published Report</span></a>
+      </div>
       <div class="timeline-wrap">
         <div class="growth">
           <div class="growth-line"></div>
@@ -230,16 +337,71 @@
       </div>
     </section>
 
-    <section class="section reveal">
+    <section class="section reveal" id="social-proof">
       <p class="section-head">Social Proof</p>
       <div class="quotes">
-        <div class="quote-note">Add 1–2 verified quotes from advisor/teammate with name + role, and I’ll publish them here in the same visual style.</div>
+        <article class="quote-card">
+          <p class="quote-text">“Just ask me and I can take you.”</p>
+          <p class="quote-meta">Aiden Ware Bosanko · Team Coordination Message · Discord</p>
+        </article>
+        <article class="quote-card">
+          <p class="quote-text">“Are y’all ready for the meeting, staff?”</p>
+          <p class="quote-meta">Kaleb Harris · Weekly Staff Coordination · Discord</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="faq">
+      <p class="section-head">FAQ</p>
+      <div class="faq-list">
+        <article class="faq-item">
+          <p class="faq-q">Internships</p>
+          <p class="faq-a">Open to internship opportunities tied to robotics, embedded systems, and autonomous platforms.</p>
+        </article>
+        <article class="faq-item">
+          <p class="faq-q">Availability</p>
+          <p class="faq-a">Available for advisor calls, partner conversations, and recruiting interviews throughout the semester.</p>
+        </article>
+        <article class="faq-item">
+          <p class="faq-q">Location</p>
+          <p class="faq-a">Based in the San Antonio, Texas area and open to relocation for high-impact opportunities.</p>
+        </article>
+        <article class="faq-item">
+          <p class="faq-q">Transfer Timeline</p>
+          <p class="faq-a">Completing studies at NLC in 2026 and transferring to Texas A&amp;M University for Fall 2026.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section reveal" id="assets">
+      <p class="section-head">All Docs &amp; Photos</p>
+      <div class="docs-list">
+        <article class="doc-item"><span class="doc-name">Kaleb_Harris_Resume_Master.pdf</span><a class="doc-open" href="Kaleb_Harris_Resume_Master.pdf" target="_blank">Open</a></article>
+        <article class="doc-item"><span class="doc-name">aerospace_report (3).pdf</span><a class="doc-open" href="aerospace_report (3).pdf" target="_blank">Open</a></article>
+        <article class="doc-item"><span class="doc-name">Piezoelectric_Structural_Health_Monitoring_-compressed.pdf</span><a class="doc-open" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank">Open</a></article>
+        <article class="doc-item"><span class="doc-name">NLC_Stem_Club_Constitution.docx</span><a class="doc-open" href="NLC_Stem_Club_Constitution.docx" target="_blank">Open</a></article>
+      </div>
+      <div class="photo-grid-all">
+        <img src="uav_photo_1.jpg" alt="uav photo 1"/>
+        <img src="uav_photo_2.jpg" alt="uav photo 2"/>
+        <img src="uav_photo_3.jpg" alt="uav photo 3"/>
+        <img src="uav_photo_4.jpg" alt="uav photo 4"/>
+        <img src="uav_photo_5.jpg" alt="uav photo 5"/>
+        <img src="uav_photo_6.jpg" alt="uav photo 6"/>
+        <img src="1500.png" alt="1500 photo"/>
+        <img src="1500%20(1).png" alt="1500 photo 1"/>
+        <img src="1500%20(2).png" alt="1500 photo 2"/>
+        <img src="1500%20(3).png" alt="1500 photo 3"/>
+        <img src="1500%20(4).png" alt="1500 photo 4"/>
+        <img src="1500%20(5).png" alt="1500 photo 5"/>
+        <img src="1500%20(6).png" alt="1500 photo 6"/>
       </div>
     </section>
 
     <footer class="foot">
       <span>NLC STEM Club Impact Page</span>
       <span>Kaleb Harris · Founder & President</span>
+      <span>Last updated: <span id="last-updated"></span></span>
     </footer>
   </main>
 
@@ -289,6 +451,12 @@
     }, { threshold: 0.3 });
 
     document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+
+    const updatedEl = document.getElementById('last-updated');
+    if (updatedEl) {
+      const d = new Date(document.lastModified);
+      updatedEl.textContent = d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
   </script>
 </body>
 </html>
