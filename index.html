@@ -537,7 +537,7 @@
         <div class="project-tags"><span class="tag">Python</span><span class="tag">Autonomous</span><span class="tag">Robotics</span><span class="tag">Sensor Fusion</span><span class="tag">SolidWorks</span></div>
       </div>
 
-      <div class="project-card reveal" style="cursor:pointer;" onclick="openPlaneModels(event)">
+      <div class="project-card reveal">
         <span class="project-num">02 · Sep 2025 – Mar 2026</span>
         <div class="project-header"><h2 class="project-title">Fixed-Wing Environmental UAV</h2><span class="project-status active">Active</span></div>
         <p class="project-org">NLC STEM Club · Northeast Lakeview College</p>
@@ -545,7 +545,6 @@
           <a class="project-proof" href="aerospace_report (3).pdf" target="_blank" data-track="proof_uav_report">Report</a>
           <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Fixed-Wing%20UAV" data-track="proof_uav_demo">Request Demo</a>
           <a class="project-proof" href="#gallery" data-track="proof_uav_photos">Photos</a>
-          <a class="project-proof" href="#" onclick="openPlaneModels(event); return false;">3D Model</a>
         </div>
         <ul class="project-bullets">
           <li><strong>Role:</strong> Lead researcher and co-director for a 4-team build.</li>
@@ -868,23 +867,6 @@
         </div>
       </div>
       <iframe class="resume-frame" src="Kaleb_Harris_Resume_Master.pdf" title="Resume Preview"></iframe>
-    </div>
-  </div>
-
-  <div class="plane-modal" id="plane-modal" onclick="closeModalBg_Plane(event)">
-    <div class="plane-box">
-      <div class="plane-head">
-        <p class="plane-title">Fixed-Wing UAV 3D Model</p>
-        <div class="resume-actions">
-          <button class="btn-preview" onclick="closeModelPlane()">Close</button>
-        </div>
-      </div>
-      <div class="plane-body">
-        <div id="plane-model-viewer" class="plane-viewer">
-          <canvas id="plane-model-canvas" aria-label="Procedural 3D plane model"></canvas>
-        </div>
-        <p id="plane-model-status" class="plane-viewer-note">Drag to rotate · Scroll to zoom · Procedural airframe assembly</p>
-      </div>
     </div>
   </div>
 
@@ -1950,17 +1932,14 @@
     }
 
     function openPlaneModels(event) {
-      if (event && event.target && event.target.closest('a,button,summary,details')) return;
-      planeModal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      initPlaneViewer();
-      resizePlaneViewer();
+      return;
     }
     function closeModelPlane() {
+      if (!planeModal) return;
       planeModal.classList.remove('open');
       document.body.style.overflow = '';
     }
-    function closeModalBg_Plane(e) { if (e.target === planeModal) closeModelPlane(); }
+    function closeModalBg_Plane(e) { if (planeModal && e.target === planeModal) closeModelPlane(); }
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') { closeModelModal(); closeModelPlane(); }
