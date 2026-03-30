@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -364,7 +364,6 @@
         <a class="social-link" href="https://github.com/hkaleb290-creator" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
         <a class="social-link" href="https://www.linkedin.com/in/kaleb-harris-a574b636b/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
       </div>
-      <button class="btn-theme" id="theme-toggle" title="Toggle dark mode">◑</button>
       <button class="hamburger" id="hamburger">☰</button>
     </div>
   </header>
@@ -930,16 +929,6 @@
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
     sections.forEach(s => spy.observe(s));
-
-    // Dark mode
-    const themeBtn = document.getElementById('theme-toggle');
-    const saved = localStorage.getItem('kh-theme');
-    if (saved) document.documentElement.setAttribute('data-theme', saved);
-    themeBtn.addEventListener('click', () => {
-      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('kh-theme', next);
-    });
 
     // Mobile nav
     const hamburger = document.getElementById('hamburger');
