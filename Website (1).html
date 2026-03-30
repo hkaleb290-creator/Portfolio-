@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaleb Harris — Engineering Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f5f4f0; --ink: #1a1a18; --accent: #c8441a;
+      --muted: #9a9990; --card: #eeecea; --border: #d8d6d0; --tag-bg: #e8e6e1;
+    }
+    [data-theme="dark"] {
+      --bg: #111110; --ink: #e8e6e0; --accent: #e05a2b;
+      --muted: #6a6860; --card: #1a1a18; --border: #2a2a28; --tag-bg: #1e1e1c;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.6; min-height: 100vh; transition: background 0.3s, color 0.3s; }
+
+    /* HEADER */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 2.5rem; background: var(--bg); border-bottom: 1px solid var(--border); transition: box-shadow 0.3s, background 0.3s; gap: 1rem; }
+    header.scrolled { box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.1rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; white-space: nowrap; }
+    .header-right { display: flex; align-items: center; gap: 0.25rem; flex-wrap: nowrap; }
+    nav { display: flex; align-items: center; gap: 0.15rem; }
+    nav a { text-decoration: none; color: var(--muted); font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; padding: 0.35rem 0.6rem; border: 1px solid transparent; transition: color 0.2s, border-color 0.2s; white-space: nowrap; }
+    nav a:hover, nav a.active { color: var(--ink); border-color: var(--border); }
+    .btn-resume { display: inline-flex; align-items: center; gap: 0.4rem; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.35rem 0.85rem; background: var(--accent); color: #fff; border: none; cursor: pointer; text-decoration: none; transition: opacity 0.2s; white-space: nowrap; margin-left: 0.5rem; }
+    .btn-resume:hover { opacity: 0.85; }
+    .btn-theme { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 15px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s, color 0.2s; flex-shrink: 0; }
+    .btn-theme:hover { color: var(--ink); border-color: var(--ink); }
+    .hamburger { display: none; background: none; border: 1px solid var(--border); color: var(--muted); width: 32px; height: 32px; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0; }
+    .mobile-nav { display: none; position: fixed; top: 57px; left: 0; right: 0; z-index: 99; background: var(--bg); border-bottom: 1px solid var(--border); flex-direction: column; padding: 1rem 1.5rem; gap: 0; }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a { text-decoration: none; color: var(--muted); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .mobile-nav a:last-child { border-bottom: none; }
+
+    /* HERO */
+    .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; align-items: end; padding: 8rem 2.5rem 4rem; border-bottom: 1px solid var(--border); gap: 4rem; }
+    .hero-eyebrow { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; transform: translateY(12px); animation: rise 0.6s 0.2s forwards; }
+    .hero-name { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem, 6.5vw, 6rem); line-height: 0.95; letter-spacing: -0.03em; color: var(--ink); opacity: 0; transform: translateY(16px); animation: rise 0.7s 0.35s forwards; }
+    .hero-name em { font-style: italic; color: var(--accent); }
+    .hero-sub { max-width: 480px; margin-top: 2.5rem; color: var(--muted); font-size: 13px; line-height: 1.85; opacity: 0; transform: translateY(12px); animation: rise 0.6s 0.55s forwards; }
+    .hero-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.75rem; opacity: 0; transform: translateY(10px); animation: rise 0.6s 0.7s forwards; }
+    .hero-pill { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.8rem; border: 1px solid var(--border); color: var(--muted); background: var(--tag-bg); }
+    .hero-actions { display: flex; align-items: center; gap: 0.75rem; margin-top: 2.5rem; flex-wrap: wrap; opacity: 0; animation: rise 0.6s 0.85s forwards; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.6rem 1.2rem; background: var(--accent); color: #fff; text-decoration: none; transition: opacity 0.2s; }
+    .hero-cta:hover { opacity: 0.85; }
+    .hero-cta-ghost { background: none; color: var(--muted); border: 1px solid var(--border); transition: color 0.2s, border-color 0.2s; }
+    .hero-cta-ghost:hover { color: var(--ink); border-color: var(--ink); }
+    .hero-scroll { margin-top: 2rem; display: flex; align-items: center; gap: 0.75rem; color: var(--muted); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0; animation: rise 0.6s 1s forwards; }
+    .hero-scroll::before { content: ''; display: block; width: 40px; height: 1px; background: var(--muted); }
+    .hero-right { opacity: 0; transform: translateY(16px); animation: rise 0.7s 0.5s forwards; align-self: center; padding-bottom: 2rem; }
+
+    /* STATS PANEL */
+    .stats-panel { border: 1px solid var(--border); background: var(--card); }
+    .stats-panel-header { padding: 0.9rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
+    .stats-panel-header::after { content: '● LIVE'; font-size: 9px; letter-spacing: 0.12em; color: var(--accent); }
+    .stat-row { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-cell { padding: 1.1rem 1.25rem; border-right: 1px solid var(--border); }
+    .stat-cell:last-child { border-right: none; }
+    .stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; line-height: 1; letter-spacing: -0.02em; color: var(--ink); }
+    .stat-num span { color: var(--accent); }
+    .stat-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+
+    /* SECTIONS */
+    .section { padding: 5rem 2.5rem; border-bottom: 1px solid var(--border); }
+    .section-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* PROJECT CARDS */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .project-card { background: var(--bg); padding: 2rem; display: flex; flex-direction: column; gap: 0.85rem; transition: background 0.2s; position: relative; overflow: hidden; }
+    .project-card::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--accent); transition: width 0.35s ease; }
+    .project-card:hover { background: var(--card); }
+    .project-card:hover::after { width: 100%; }
+    .project-num { font-size: 10px; letter-spacing: 0.12em; color: var(--muted); }
+    .project-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .project-title { font-family: 'DM Serif Display', serif; font-size: 1.35rem; line-height: 1.15; letter-spacing: -0.01em; color: var(--ink); }
+    .project-status { flex-shrink: 0; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.2rem 0.55rem; border: 1px solid currentColor; }
+    .project-status.active { color: #5a8a3a; }
+    .project-status.complete { color: var(--muted); }
+    .project-org { font-size: 11px; color: var(--accent); letter-spacing: 0.06em; }
+    .project-desc { font-size: 12px; color: var(--muted); line-height: 1.8; flex: 1; }
+    .project-desc strong { color: var(--ink); font-weight: 500; }
+    .project-metrics { display: flex; gap: 1.25rem; padding: 0.85rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+    .metric { display: flex; flex-direction: column; gap: 0.1rem; }
+    .metric-val { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--ink); line-height: 1; }
+    .metric-label { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1px solid var(--border); color: var(--muted); background: var(--tag-bg); }
+
+    /* PUBLICATIONS */
+    .pub-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .pub-item { background: var(--bg); padding: 1.75rem 2rem; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; transition: background 0.2s; }
+    .pub-item:hover { background: var(--card); }
+    .pub-type { display: inline-block; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.2rem 0.55rem; border: 1px solid var(--accent); color: var(--accent); margin-bottom: 0.65rem; }
+    .pub-title { font-family: 'DM Serif Display', serif; font-size: 1.2rem; line-height: 1.2; color: var(--ink); margin-bottom: 0.45rem; }
+    .pub-authors { font-size: 11px; color: var(--muted); margin-bottom: 0.3rem; line-height: 1.6; }
+    .pub-venue { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+    .pub-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.5rem 1rem; border: 1px solid var(--border); color: var(--ink); text-decoration: none; transition: border-color 0.2s, color 0.2s; white-space: nowrap; align-self: start; }
+    .pub-link:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* GALLERY */
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .gallery-item { position: relative; overflow: hidden; aspect-ratio: 4/3; background: var(--card); cursor: pointer; }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease, filter 0.3s; filter: saturate(0.85); display: block; }
+    .gallery-item:hover img { transform: scale(1.05); filter: saturate(1.1); }
+    .gallery-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.6rem 0.8rem; background: linear-gradient(transparent, rgba(0,0,0,0.6)); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.9); opacity: 0; transition: opacity 0.25s; }
+    .gallery-item:hover .gallery-caption { opacity: 1; }
+    .gallery-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; color: var(--muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .gallery-placeholder svg { opacity: 0.3; }
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; object-fit: contain; }
+    .lightbox-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 16px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-family: 'DM Mono', monospace; }
+    .lightbox-caption { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); white-space: nowrap; }
+    .gallery-note { margin-top: 1.25rem; font-size: 11px; color: var(--muted); letter-spacing: 0.04em; line-height: 1.7; }
+    .gallery-note code { background: var(--tag-bg); padding: 0.1rem 0.35rem; font-family: 'DM Mono', monospace; }
+
+    /* TIMELINE */
+    .timeline { display: flex; flex-direction: column; border: 1px solid var(--border); }
+    .timeline-item { display: grid; grid-template-columns: 160px 1fr; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-item:hover { background: var(--card); }
+    .timeline-date { padding: 1.5rem; font-size: 11px; letter-spacing: 0.08em; color: var(--muted); border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: flex-start; gap: 0.25rem; }
+    .timeline-date-year { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--ink); }
+    .timeline-body { padding: 1.5rem; }
+    .timeline-title { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--ink); margin-bottom: 0.2rem; }
+    .timeline-org { font-size: 11px; color: var(--accent); letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+    .timeline-desc { font-size: 12px; color: var(--muted); line-height: 1.75; }
+
+    /* SKILLS */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .skill-group { background: var(--bg); padding: 1.75rem; transition: background 0.2s; }
+    .skill-group:hover { background: var(--card); }
+    .skill-group-title { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+    .skill-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .skill-list li { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; }
+    .skill-list li::before { content: '—'; color: var(--border); font-size: 10px; }
+
+    /* CONTACT */
+    .contact-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+    .contact-link { display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; font-size: 12px; letter-spacing: 0.08em; color: var(--ink); padding: 0.6rem 1.1rem; border: 1px solid var(--border); transition: border-color 0.2s, color 0.2s, background 0.2s; cursor: pointer; background: none; font-family: 'DM Mono', monospace; }
+    .contact-link:hover { border-color: var(--accent); color: var(--accent); }
+    .contact-link.copied { border-color: #5a8a3a !important; color: #5a8a3a !important; }
+
+    /* FOOTER */
+    footer { padding: 1.5rem 2.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); letter-spacing: 0.05em; flex-wrap: wrap; gap: 0.5rem; }
+
+    /* ANIMATIONS */
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } .hero-right { display: none; } }
+    @media (max-width: 680px) {
+      header { padding: 0.85rem 1.25rem; }
+      nav, .btn-resume { display: none; }
+      .hamburger { display: flex; }
+      .hero, .section { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .hero { padding-top: 6rem; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-date { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; flex-direction: row; align-items: center; gap: 0.75rem; }
+      .pub-item { grid-template-columns: 1fr; }
+      footer { padding: 1.25rem; }
+    }
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-name { font-size: clamp(2.2rem, 11vw, 3rem); }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="site-header">
+    <a class="logo" href="#">Kaleb Harris</a>
+    <div class="header-right">
+      <nav>
+        <a href="#projects">Work</a>
+        <a href="#publications">Research</a>
+        <a href="#gallery">Photos</a>
+        <a href="#experience">Background</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn-resume" href="Kaleb_Harris_Resume_Master.pdf" download>↓ Resume</a>
+      <button class="btn-theme" id="theme-toggle" title="Toggle dark mode">◑</button>
+      <button class="hamburger" id="hamburger">☰</button>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#projects" onclick="closeMobileNav()">Work</a>
+    <a href="#publications" onclick="closeMobileNav()">Research</a>
+    <a href="#gallery" onclick="closeMobileNav()">Photos</a>
+    <a href="#experience" onclick="closeMobileNav()">Background</a>
+    <a href="#skills" onclick="closeMobileNav()">Skills</a>
+    <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">A.S. Engineering · NLC · Texas A&amp;M Commit · Class of 2028</p>
+      <h1 class="hero-name">Autonomous<br>systems <em>&amp; robotics</em>.</h1>
+      <p class="hero-sub">I build things that move, sense, and decide on their own. From autonomous agricultural rovers to 3D-printed fixed-wing UAVs and structural health monitors — I bridge embedded software, mechanical fabrication, and team leadership to take projects from concept to flying hardware.</p>
+      <div class="hero-pills">
+        <span class="hero-pill">CAD / EDA</span>
+        <span class="hero-pill">Embedded Systems</span>
+        <span class="hero-pill">Autonomous Systems</span>
+        <span class="hero-pill">Robotics</span>
+        <span class="hero-pill">Team Leadership</span>
+      </div>
+      <div class="hero-actions">
+        <a class="hero-cta" href="#contact">Get in touch</a>
+        <a class="hero-cta hero-cta-ghost" href="#projects">View work</a>
+      </div>
+      <p class="hero-scroll">Scroll to explore</p>
+    </div>
+    <div class="hero-right">
+      <div class="stats-panel">
+        <div class="stats-panel-header">Engineering snapshot</div>
+        <div class="stat-row">
+          <div class="stat-cell"><div class="stat-num">3<span>+</span></div><div class="stat-label">Active Projects</div></div>
+          <div class="stat-cell"><div class="stat-num">90<span>+</span></div><div class="stat-label">STEM Club Members</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell"><div class="stat-num">850<span>mV</span></div><div class="stat-label">Peak SHM Response</div></div>
+          <div class="stat-cell"><div class="stat-num">28<span>wk</span></div><div class="stat-label">UAV Build Duration</div></div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell"><div class="stat-num">1.2<span>m</span></div><div class="stat-label">UAV Wingspan</div></div>
+          <div class="stat-cell"><div class="stat-num">&lt;$500</div><div class="stat-label">UAV Build Cost</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section" id="projects">
+    <p class="section-label">Engineering Projects</p>
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <span class="project-num">01 · Jan 2026 – Present</span>
+        <div class="project-header"><h2 class="project-title">DIRT Rover</h2><span class="project-status active">Active</span></div>
+        <p class="project-org">TURTLE Robotics — Texas A&amp;M</p>
+        <p class="project-desc">Leading a <strong>3-person software team</strong> developing an autonomous rover integrating a deep spectroscopy probe for real-time soil quality measurement. Full ownership of architecture decisions, task delegation, and sprint planning — with cross-functional coordination across mechanical and electrical subsystems.</p>
+        <div class="project-metrics">
+          <div class="metric"><span class="metric-val">3</span><span class="metric-label">Subsystems</span></div>
+          <div class="metric"><span class="metric-val">Auto</span><span class="metric-label">Navigation</span></div>
+          <div class="metric"><span class="metric-val">Real-time</span><span class="metric-label">Soil Analysis</span></div>
+        </div>
+        <div class="project-tags"><span class="tag">Python</span><span class="tag">Autonomous</span><span class="tag">Robotics</span><span class="tag">Sensor Fusion</span><span class="tag">SolidWorks</span></div>
+      </div>
+
+      <div class="project-card reveal">
+        <span class="project-num">02 · Sep 2025 – Mar 2026</span>
+        <div class="project-header"><h2 class="project-title">Fixed-Wing Environmental UAV</h2><span class="project-status active">Active</span></div>
+        <p class="project-org">NLC STEM Club · Northeast Lakeview College</p>
+        <p class="project-desc">Lead researcher and co-director of a <strong>28-week, 4-team build</strong> of a 3D-printed fixed-wing UAV (Eclipson Model T, LW-PLA, carbon fiber spars) running INAV on a Matek F405-WMN. Independent Arduino Nano payload logs BMP280 + MQ135 data to microSD every 2 seconds. Targeting <strong>San Antonio metro air quality mapping</strong>. Full research report published.</p>
+        <div class="project-metrics">
+          <div class="metric"><span class="metric-val">1200mm</span><span class="metric-label">Wingspan</span></div>
+          <div class="metric"><span class="metric-val">35min</span><span class="metric-label">Est. Flight Time</span></div>
+          <div class="metric"><span class="metric-val">&lt;$500</span><span class="metric-label">Total Budget</span></div>
+        </div>
+        <div class="project-tags"><span class="tag">INAV</span><span class="tag">Arduino</span><span class="tag">LW-PLA</span><span class="tag">BMP280</span><span class="tag">MQ135</span><span class="tag">Systems Integration</span></div>
+      </div>
+
+      <div class="project-card reveal">
+        <span class="project-num">03 · Oct 2025</span>
+        <div class="project-header"><h2 class="project-title">Piezoelectric SHM System</h2><span class="project-status complete">Complete</span></div>
+        <p class="project-org">NLC STEM Club</p>
+        <p class="project-desc">Co-developed a structural health monitoring system using piezoelectric transducers and an Arduino DAQ to detect real-time damage on Cedar and 3D-printed PLA bridge models. Identified a <strong>15-second pre-failure cascade</strong>; documented <strong>850 mV peak response</strong> in PLA vs 400 mV in wood.</p>
+        <div class="project-metrics">
+          <div class="metric"><span class="metric-val">850mV</span><span class="metric-label">PLA Peak</span></div>
+          <div class="metric"><span class="metric-val">400mV</span><span class="metric-label">Wood Peak</span></div>
+          <div class="metric"><span class="metric-val">15s</span><span class="metric-label">Pre-failure</span></div>
+        </div>
+        <div class="project-tags"><span class="tag">Arduino</span><span class="tag">C++</span><span class="tag">DAQ</span><span class="tag">Data Visualization</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PUBLICATIONS -->
+  <section class="section" id="publications">
+    <p class="section-label">Research &amp; Publications</p>
+    <div class="pub-list">
+      <div class="pub-item reveal">
+        <div>
+          <span class="pub-type">Research Report</span>
+          <p class="pub-title">Fixed-Wing UAV Design and Environmental Data Acquisition Using Additive Manufacturing</p>
+          <p class="pub-authors">Kaleb Harris · Aiden Ware Bosanko · Jorge Cruz · William Van Cleave · Isaiah Jimenez · Angelo Mejia</p>
+          <p class="pub-venue">NLC STEM Club · Northeast Lakeview College (Alamo Colleges) · Sep 2025 – Mar 2026 · 23 pp.</p>
+        </div>
+        <a class="pub-link" href="aerospace_report (3).pdf" target="_blank">↗ View Report</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHOTO GALLERY -->
+  <section class="section" id="gallery">
+    <p class="section-label">Build Gallery — Fixed-Wing UAV</p>
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <p class="gallery-note">
+      To show photos: place image files named <code>uav_photo_1.jpg</code> through <code>uav_photo_8.jpg</code> in the same folder as this HTML file. They'll appear automatically above.
+    </p>
+  </section>
+
+  <div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img id="lightbox-img" src="" alt=""/>
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="experience">
+    <p class="section-label">Background</p>
+    <div class="timeline">
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date"><span class="timeline-date-year">2026</span><span>Jan – Present</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Software Team Lead — DIRT Rover</p>
+          <p class="timeline-org">TURTLE Robotics · Texas A&amp;M University</p>
+          <p class="timeline-desc">Leading software architecture for an autonomous soil-quality rover. Responsible for technical direction, sprint planning, and cross-subsystem coordination with mechanical and electrical teams. Directing a 3-person team through full-cycle development including requirements gathering, subsystem integration, and iterative testing.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date"><span class="timeline-date-year">2024</span><span>Jan – Present</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Founder &amp; President</p>
+          <p class="timeline-org">NLC STEM Club · Northeast Lakeview College</p>
+          <p class="timeline-desc">Founded the first campus-wide STEM organization at NLC. Grew the club to 90+ members through weekly technical workshops and industry guest lectures. Directed multiple engineering research initiatives including the fixed-wing UAV and SHM projects.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date"><span class="timeline-date-year">2025</span><span>Sep – Mar 2026</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Lead Researcher — Fixed-Wing UAV</p>
+          <p class="timeline-org">NLC STEM Club · Northeast Lakeview College</p>
+          <p class="timeline-desc">Co-directed a 28-week, 4-team build of a fully 3D-printed fixed-wing UAV (Eclipson Model T) for air quality research over the San Antonio metro area. Responsible for airframe assembly, INAV flight controller configuration, Arduino sensor data pipeline, and formal research publication.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date"><span class="timeline-date-year">2025</span><span>Oct</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Research — Piezoelectric SHM System</p>
+          <p class="timeline-org">NLC STEM Club · Northeast Lakeview College</p>
+          <p class="timeline-desc">Co-designed and built a piezoelectric DAQ system to monitor bridge model structural integrity in real time. Identified a 15-second pre-failure cascade and documented 850 mV peak response in PLA vs 400 mV in Cedar specimens.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date"><span class="timeline-date-year">2022</span><span>Mar – Present</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">Lifeguard / Lead Technical Trainer</p>
+          <p class="timeline-org">Schertz Family YMCA · Universal City, TX</p>
+          <p class="timeline-desc">Directs emergency response training ensuring 100% staff safety compliance. Communicates technical safety procedures to 100+ patrons daily.</p>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-date"><span class="timeline-date-year">2024</span><span>Aug – May 2026</span></div>
+        <div class="timeline-body">
+          <p class="timeline-title">A.S. Engineering — GPA 3.5</p>
+          <p class="timeline-org">Northeast Lakeview College · Alamo Colleges · Expected May 2026</p>
+          <p class="timeline-desc">Associate of Science in Engineering. Active founder and president of the NLC STEM Club. Committed to Texas A&amp;M University for Fall 2026 (Class of 2028).</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <p class="section-label">Technical Skills</p>
+    <div class="skills-grid">
+      <div class="skill-group reveal">
+        <p class="skill-group-title">Design &amp; Modeling</p>
+        <ul class="skill-list"><li>SolidWorks (Parts &amp; Assemblies)</li><li>Fusion 360 (3D Assemblies)</li><li>AutoCAD</li><li>MATLAB / Simulink</li></ul>
+      </div>
+      <div class="skill-group reveal">
+        <p class="skill-group-title">Embedded Systems</p>
+        <ul class="skill-list"><li>Python · C++</li><li>Arduino IDE</li><li>INAV / ArduPilot</li><li>Arduino · Raspberry Pi</li><li>PLCs · Git</li></ul>
+      </div>
+      <div class="skill-group reveal">
+        <p class="skill-group-title">Manufacturing &amp; Testing</p>
+        <ul class="skill-list"><li>3D Printing (LW-PLA, PLA)</li><li>Rapid Prototyping</li><li>Structural Health Monitoring</li><li>DAQ Systems</li><li>Data Analysis (CSV / Excel)</li></ul>
+      </div>
+      <div class="skill-group reveal">
+        <p class="skill-group-title">Leadership</p>
+        <ul class="skill-list"><li>STEM Club Founder &amp; President</li><li>Cross-functional Team Lead</li><li>Sprint Planning</li><li>Research &amp; Technical Writing</li><li>Safety Training &amp; Compliance</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="contact">
+    <p class="section-label">Get in touch</p>
+    <p style="color:var(--muted);font-size:13px;max-width:480px;margin-bottom:2rem;line-height:1.8;">Completing an A.S. in Engineering at NLC (May 2026), then transferring to Texas A&amp;M (Class of 2028). Open to internships, research collaborations, and robotics competitions. Based in Saint Hedwig, TX.</p>
+    <div class="contact-row reveal">
+      <button class="contact-link" id="copy-email" onclick="copyEmail()">✉ hkaleb290@gmail.com</button>
+      <a class="contact-link" href="tel:2109844611">✆ (210) 984-4611</a>
+      <a class="contact-link" href="#" target="_blank">↗ LinkedIn</a>
+      <a class="contact-link" href="#" target="_blank">↗ GitHub</a>
+      <a class="contact-link" href="Kaleb_Harris_Resume_Master.pdf" download>↓ Download Resume</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Kaleb Harris</span>
+    <span>Saint Hedwig, TX · NLC → Texas A&amp;M Class of 2028</span>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const revObs = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); revObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(el => revObs.observe(el));
+
+    // Header scroll shadow
+    const hdr = document.getElementById('site-header');
+    window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 20));
+
+    // Active nav spy
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a');
+    const spy = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navLinks.forEach(l => l.classList.remove('active'));
+          const a = document.querySelector(`nav a[href="#${e.target.id}"]`);
+          if (a) a.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(s => spy.observe(s));
+
+    // Dark mode
+    const themeBtn = document.getElementById('theme-toggle');
+    const saved = localStorage.getItem('kh-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+    themeBtn.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('kh-theme', next);
+    });
+
+    // Mobile nav
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    hamburger.addEventListener('click', () => mobileNav.classList.toggle('open'));
+    function closeMobileNav() { mobileNav.classList.remove('open'); }
+
+    // Gallery — build placeholders, swap for real images if found
+    const captions = ['Wing assembly','Airframe finishing','Sensor payload','Fuselage detail','Wing complete','Pre-assembly layout','Electronics integration','Full assembly day'];
+    const grid = document.getElementById('gallery-grid');
+    captions.forEach((cap, i) => {
+      const n = i + 1;
+      const item = document.createElement('div');
+      item.className = 'gallery-item reveal';
+      item.innerHTML = `
+        <img src="uav_photo_${n}.jpg" alt="${cap}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+          onload="this.closest('.gallery-item').setAttribute('data-loaded','1')"
+          style="display:block"/>
+        <div class="gallery-placeholder" style="display:none">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span>Photo ${n}</span>
+        </div>
+        <div class="gallery-caption">${cap}</div>`;
+      item.addEventListener('click', () => {
+        if (item.getAttribute('data-loaded')) openLightbox(item.querySelector('img'), cap);
+      });
+      grid.appendChild(item);
+    });
+
+    // Lightbox
+    function openLightbox(img, cap) {
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox-caption').textContent = cap || '';
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function closeLightboxBg(e) { if (e.target === document.getElementById('lightbox')) closeLightbox(); }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    // Copy email
+    function copyEmail() {
+      navigator.clipboard.writeText('hkaleb290@gmail.com').then(() => {
+        const btn = document.getElementById('copy-email');
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
+
+</body>
+</html>
