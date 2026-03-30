@@ -5,127 +5,269 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>NLC STEM Club — Founder Impact | Kaleb Harris</title>
   <meta name="description" content="NLC STEM Club page: founding story, mission, growth to 90+ members, and engineering initiatives led by Kaleb Harris."/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --bg: #f5f4f0;
       --ink: #1a1a18;
       --accent: #c8441a;
-      --muted: #9a9990;
+      --muted: #7f7d75;
       --card: #eeecea;
       --border: #d8d6d0;
       --tag-bg: #e8e6e1;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       background: var(--bg);
       color: var(--ink);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      line-height: 1.65;
+      font-family: 'DM Mono', monospace;
+      line-height: 1.7;
+      min-height: 100vh;
     }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
-    .top {
+
+    .shell { max-width: 1160px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
       border: 1px solid var(--border);
-      background: linear-gradient(135deg, rgba(200,68,26,0.05), transparent 65%), var(--card);
-      padding: 2rem;
-      margin-bottom: 1.25rem;
+      background: var(--bg);
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 1rem;
+      position: sticky;
+      top: 0.75rem;
+      z-index: 10;
+      backdrop-filter: blur(3px);
     }
-    .eyebrow {
+
+    .topbar .title {
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.8rem;
+      color: var(--muted);
     }
-    h1 {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.05;
-      margin-bottom: 0.9rem;
-      letter-spacing: -0.02em;
-    }
-    .lede { color: #3b3a37; max-width: 850px; font-size: 15px; }
-    .actions { display: flex; gap: 0.65rem; flex-wrap: wrap; margin-top: 1.1rem; }
+
     .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       text-decoration: none;
-      padding: 0.55rem 0.95rem;
+      padding: 0.55rem 0.9rem;
       border: 1px solid var(--border);
       color: var(--ink);
-      background: #fff;
+      background: var(--bg);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      white-space: nowrap;
     }
-    .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 1px;
-      background: var(--border);
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.primary:hover { opacity: 0.88; }
+
+    .hero {
       border: 1px solid var(--border);
-      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, rgba(200,68,26,0.06), transparent 60%), var(--card);
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1px;
+      margin-bottom: 1rem;
     }
-    .card { background: #fff; padding: 1.2rem; }
-    .card h2 {
-      font-size: 12px;
-      letter-spacing: 0.12em;
+
+    .hero-main {
+      background: var(--bg);
+      padding: 1.4rem;
+      border: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
     }
-    .card p { color: #44423d; font-size: 13px; }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 4.2vw, 3.35rem);
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .lede { color: #3f3d39; font-size: 13.5px; max-width: 760px; }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 1.1rem;
+    }
+
+    .hero-side {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .side-head {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .side-line {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 0.75rem;
+    }
+
+    .side-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .side-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .section {
+      border: 1px solid var(--border);
+      background: var(--bg);
+      margin-top: 1rem;
+    }
+
+    .section-head {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-head::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .card {
+      background: #fff;
+      padding: 1.15rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .card:hover { background: var(--card); transform: translateY(-2px); }
+
+    .card-title {
+      font-size: 10px;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.45rem;
+    }
+
+    .card-text { font-size: 12.5px; color: #484641; }
 
     .metrics {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
       background: var(--border);
-      border: 1px solid var(--border);
-      margin-bottom: 1.25rem;
     }
-    .metric { background: #fff; padding: 1rem; }
-    .metric .num {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 2rem;
+
+    .metric {
+      background: #fff;
+      padding: 1rem;
+      transition: background 0.2s;
+    }
+
+    .metric:hover { background: var(--card); }
+
+    .num {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.7rem, 2.5vw, 2.25rem);
       line-height: 1;
+      margin-bottom: 0.28rem;
       color: var(--ink);
-      margin-bottom: 0.25rem;
     }
-    .metric .num span { color: var(--accent); }
-    .metric .label {
+
+    .num span { color: var(--accent); }
+
+    .label {
       font-size: 10px;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    .list {
+    .initiative-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1px;
       background: var(--border);
-      border: 1px solid var(--border);
     }
-    .item { background: #fff; padding: 1.1rem; }
-    .item .title {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 1.1rem;
+
+    .initiative {
+      background: #fff;
+      padding: 1.15rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .initiative:hover { background: var(--card); transform: translateY(-2px); }
+
+    .initiative h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.18rem;
+      line-height: 1.2;
       margin-bottom: 0.35rem;
     }
-    .item .meta {
+
+    .initiative .meta {
       font-size: 10px;
       color: var(--accent);
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-bottom: 0.55rem;
     }
-    .item p { font-size: 12.5px; color: #4a4843; }
 
-    .footer {
-      margin-top: 1.25rem;
+    .initiative p { font-size: 12.5px; color: #4a4843; }
+
+    .foot {
+      margin-top: 1rem;
       border: 1px solid var(--border);
       background: var(--card);
-      padding: 1rem;
+      padding: 0.9rem 1rem;
       font-size: 11px;
       color: var(--muted);
       letter-spacing: 0.05em;
@@ -135,67 +277,106 @@
       gap: 0.5rem;
     }
 
-    @media (max-width: 860px) {
-      .grid { grid-template-columns: 1fr; }
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
       .metrics { grid-template-columns: repeat(2, 1fr); }
-      .list { grid-template-columns: 1fr; }
+      .mission-grid, .initiative-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .shell { padding-left: 0.9rem; padding-right: 0.9rem; }
+      .hero { padding: 1rem; }
+      .hero-main, .hero-side { padding: 0.9rem; }
+      .topbar { top: 0; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="top">
-      <p class="eyebrow">Northeast Lakeview College</p>
-      <h1>NLC STEM Club<br/>Founded and Scaled by Kaleb Harris</h1>
-      <p class="lede">Built from the ground up as the first campus-wide STEM organization at NLC, the club became a launchpad for hands-on engineering, research publication, and technical leadership development.</p>
-      <div class="actions">
-        <a class="btn primary" href="index.html">← Back to Portfolio</a>
-        <a class="btn" href="mailto:hkaleb290@gmail.com?subject=NLC%20STEM%20Club%20Collaboration">Collaborate</a>
+  <main class="shell">
+    <div class="topbar">
+      <p class="title">NLC STEM Club Impact Page</p>
+      <a class="btn" href="index.html">← Back to Portfolio</a>
+    </div>
+
+    <section class="hero">
+      <div class="hero-main">
+        <p class="eyebrow">Northeast Lakeview College</p>
+        <h1>Founded and Scaled:<br/>NLC STEM Club</h1>
+        <p class="lede">Built from the ground up as the first campus-wide STEM organization at NLC, the club became a launchpad for hands-on engineering, technical leadership, and research publication.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="mailto:hkaleb290@gmail.com?subject=NLC%20STEM%20Club%20Collaboration">Collaborate</a>
+          <a class="btn" href="aerospace_report (3).pdf" target="_blank">View UAV Report</a>
+          <a class="btn" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank">View SHM Report</a>
+        </div>
+      </div>
+      <aside class="hero-side">
+        <p class="side-head">Founder Snapshot</p>
+        <div class="side-line">
+          <p class="side-label">Role</p>
+          <p class="side-value">Founder & President</p>
+        </div>
+        <div class="side-line">
+          <p class="side-label">Core Focus</p>
+          <p class="side-value">Execution Culture</p>
+        </div>
+        <div class="side-line">
+          <p class="side-label">Outcomes</p>
+          <p class="side-value">Research + Teams</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section">
+      <p class="section-head">Mission and Leadership</p>
+      <div class="mission-grid">
+        <article class="card">
+          <p class="card-title">Mission</p>
+          <p class="card-text">Create an accessible, execution-focused STEM community where students build real hardware/software systems, present technical work, and develop professional engineering leadership.</p>
+        </article>
+        <article class="card">
+          <p class="card-title">Founder Role</p>
+          <p class="card-text">As Founder and President, Kaleb established structure, recruited members, led project selection, coordinated technical teams, and built a culture centered on measurable engineering outcomes.</p>
+        </article>
       </div>
     </section>
 
-    <section class="grid">
-      <article class="card">
-        <h2>Mission</h2>
-        <p>Create an accessible, execution-focused STEM community where students build real hardware/software systems, present technical work, and develop professional engineering leadership.</p>
-      </article>
-      <article class="card">
-        <h2>Founder Role</h2>
-        <p>As Founder and President, Kaleb established structure, recruited members, led project selection, coordinated technical teams, and built a culture centered on measurable engineering outcomes.</p>
-      </article>
+    <section class="section">
+      <p class="section-head">Impact Metrics</p>
+      <div class="metrics">
+        <div class="metric"><div class="num">90<span>+</span></div><div class="label">Active Members</div></div>
+        <div class="metric"><div class="num">2024</div><div class="label">Club Founded</div></div>
+        <div class="metric"><div class="num">3</div><div class="label">Major Initiatives</div></div>
+        <div class="metric"><div class="num">2</div><div class="label">Published Reports</div></div>
+      </div>
     </section>
 
-    <section class="metrics">
-      <div class="metric"><div class="num">90<span>+</span></div><div class="label">Active Members</div></div>
-      <div class="metric"><div class="num">2024</div><div class="label">Club Founded</div></div>
-      <div class="metric"><div class="num">3</div><div class="label">Major Initiatives</div></div>
-      <div class="metric"><div class="num">2</div><div class="label">Published Reports</div></div>
+    <section class="section">
+      <p class="section-head">Initiatives</p>
+      <div class="initiative-grid">
+        <article class="initiative">
+          <h3>Fixed-Wing Environmental UAV</h3>
+          <p class="meta">Research Initiative</p>
+          <p>28-week multi-team engineering build integrating additive manufacturing, INAV flight control, and custom sensor payload logging for environmental data collection.</p>
+        </article>
+        <article class="initiative">
+          <h3>Piezoelectric SHM System</h3>
+          <p class="meta">Research Initiative</p>
+          <p>Real-time structural health monitoring with DAQ instrumentation and bridge-model testing that identified measurable pre-failure signal behavior.</p>
+        </article>
+        <article class="initiative">
+          <h3>Technical Workshop Program</h3>
+          <p class="meta">Community Building</p>
+          <p>Developed regular workshop cadence and team-based execution model to convert student interest into real deliverables and hands-on competency growth.</p>
+        </article>
+        <article class="initiative">
+          <h3>Leadership Pipeline</h3>
+          <p class="meta">Org Development</p>
+          <p>Built a peer leadership structure with project leads and accountable execution paths to sustain momentum beyond single-semester participation.</p>
+        </article>
+      </div>
     </section>
 
-    <section class="list">
-      <article class="item">
-        <p class="title">Fixed-Wing Environmental UAV</p>
-        <p class="meta">Research Initiative</p>
-        <p>28-week multi-team engineering build integrating additive manufacturing, INAV flight control, and custom sensor payload logging for environmental data collection.</p>
-      </article>
-      <article class="item">
-        <p class="title">Piezoelectric SHM System</p>
-        <p class="meta">Research Initiative</p>
-        <p>Real-time structural health monitoring with DAQ instrumentation and bridge-model testing that identified measurable pre-failure signal behavior.</p>
-      </article>
-      <article class="item">
-        <p class="title">Technical Workshop Program</p>
-        <p class="meta">Community Building</p>
-        <p>Developed regular workshop cadence and team-based execution model to convert student interest into real deliverables and hands-on competency growth.</p>
-      </article>
-      <article class="item">
-        <p class="title">Leadership Pipeline</p>
-        <p class="meta">Org Development</p>
-        <p>Built a peer leadership structure with project leads and accountable execution paths to sustain momentum beyond single-semester participation.</p>
-      </article>
-    </section>
-
-    <footer class="footer">
+    <footer class="foot">
       <span>NLC STEM Club Impact Page</span>
       <span>Kaleb Harris · Founder & President</span>
     </footer>
