@@ -450,20 +450,6 @@
     </div>
   </div>
 
-  <section class="section" id="quotes">
-    <p class="section-label">Team Quotes</p>
-    <div class="quote-grid reveal">
-      <article class="quote-card">
-        <p class="quote-text">“Just ask me and I can take you.”</p>
-        <p class="quote-meta">Aiden Ware Bosanko · Team Chat Coordination · Discord</p>
-      </article>
-      <article class="quote-card">
-        <p class="quote-text">“Are y’all ready for the meeting, staff?”</p>
-        <p class="quote-meta">Kaleb Harris · Weekly Staff Coordination · Discord</p>
-      </article>
-    </div>
-  </section>
-
   <section class="section" id="featured">
     <p class="section-label">Featured Project</p>
     <div class="featured-wrap reveal">
@@ -513,7 +499,6 @@
           <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20DIRT%20Rover" data-track="proof_dirt_demo">Request Demo</a>
           <a class="project-proof" href="#featured" data-track="proof_dirt_report">Case Summary</a>
           <a class="project-proof" href="#gallery" data-track="proof_dirt_photos">Photos</a>
-          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_dirt_repo">Repo</a>
         </div>
         <ul class="project-bullets">
           <li><strong>Role:</strong> Software lead for a 3-person autonomy team.</li>
@@ -540,7 +525,6 @@
           <a class="project-proof" href="aerospace_report (3).pdf" target="_blank" data-track="proof_uav_report">Report</a>
           <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Fixed-Wing%20UAV" data-track="proof_uav_demo">Request Demo</a>
           <a class="project-proof" href="#gallery" data-track="proof_uav_photos">Photos</a>
-          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_uav_repo">Repo</a>
         </div>
         <ul class="project-bullets">
           <li><strong>Role:</strong> Lead researcher and co-director for a 4-team build.</li>
@@ -567,7 +551,6 @@
           <a class="project-proof" href="Piezoelectric_Structural_Health_Monitoring_-compressed.pdf" target="_blank" data-track="proof_shm_report">Report</a>
           <a class="project-proof" href="mailto:hkaleb290@gmail.com?subject=Demo%20Request%20-%20Piezoelectric%20SHM" data-track="proof_shm_demo">Request Demo</a>
           <a class="project-proof" href="#gallery" data-track="proof_shm_photos">Photos</a>
-          <a class="project-proof" href="https://github.com/hkaleb290-creator" target="_blank" data-track="proof_shm_repo">Repo</a>
         </div>
         <ul class="project-bullets">
           <li><strong>Role:</strong> Co-developer of bridge-model structural monitoring system.</li>
@@ -807,8 +790,9 @@
       <a class="contact-link" href="Kaleb_Harris_Resume_Master.pdf" download>↓ Download Resume</a>
     </div>
     <div style="max-width: 600px; background: var(--card); padding: 2rem; border: 1px solid var(--border); border-radius: 2px;">
-      <p style="font-size: 12px; color: var(--muted); margin-bottom: 1rem;">Or send a message directly:</p>
-      <form id="contact-form" style="display: flex; flex-direction: column; gap: 1rem;">
+      <p style="font-size: 12px; color: var(--muted); margin-bottom: 0.4rem;">Or send a message directly:</p>
+      <p style="font-size: 10px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem;">Form delivery: FormSubmit (with direct POST fallback if JavaScript is disabled)</p>
+      <form id="contact-form" action="https://formsubmit.co/hkaleb290@gmail.com" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
         <input type="hidden" name="_subject" value="New Portfolio Message — Kaleb Harris" />
         <input type="hidden" name="_template" value="table" />
