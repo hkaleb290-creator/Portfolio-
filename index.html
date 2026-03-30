@@ -1507,85 +1507,88 @@
 
     function buildProceduralPlane() {
       const faces = [];
-      const fuseColor = '#d4d8dd';
-      const wingColor = '#e8ecf1';
-      const wingInner = '#dbe0e6';
-      const tailColor = '#c5cbcf';
+      const fuseColor = '#e8ecf1';
+      const wingColor = '#dbe0e6';
+      const tailColor = '#d4d8dd';
       const skyblue = '#a8d8ff';
-      const darkMetal = '#606a76';
+      const darkMetal = '#5a6268';
       const accentColor = '#bcc2cb';
+      const redStripe = '#e74c3c';
 
-      // Long fuselage (4.2 units)
-      faces.push(...makeCuboid(0.8, -1.88, 0, 0.22, 0.22, 4.2, fuseColor));
+      // Main fuselage (long, thin body, centered at Y=0)
+      faces.push(...makeCuboid(0.8, 0, 0, 0.16, 0.16, 4.2, fuseColor));
 
-      // Fuselage top rail/spine
-      faces.push(...makeCuboid(0.8, -1.5, 0, 4.0, 0.08, 0.1, accentColor));
+      // Fuselage top spine detail
+      faces.push(...makeCuboid(0.8, 0.05, 0, 3.8, 0.06, 0.08, accentColor));
 
-      // Cockpit canopy/windscreen (white-ish)
-      faces.push(...makeCuboid(0.2, -1.7, 0, 0.55, 0.35, 0.4, skyblue));
+      // Red stripe bands on fuselage (mimicking aircraft livery)
+      faces.push(...makeCuboid(0.8, -0.08, -0.07, 0.5, 0.02, 0.28, redStripe));
+      faces.push(...makeCuboid(0.8, -0.08, 1.4, 0.6, 0.02, 0.32, redStripe));
+      faces.push(...makeCuboid(0.8, -0.08, 2.9, 0.5, 0.02, 0.28, redStripe));
 
-      // Main wing (inner section, larger)
-      faces.push(...makeCuboid(0.85, -0.05, -1.85, 1.8, 0.08, 1.4, wingColor));
-      faces.push(...makeCuboid(0.85, -0.05, 1.85, 1.8, 0.08, 1.4, wingColor));
-
-      // Outer wing panels (smaller, tapered)
-      faces.push(...makeCuboid(1.15, -0.08, -2.8, 1.2, 0.06, 0.7, wingInner));
-      faces.push(...makeCuboid(1.15, -0.08, 2.8, 1.2, 0.06, 0.7, wingInner));
-
-      // Wing root fillets
-      faces.push(...makeCuboid(0.85, -0.15, -1.3, 1.5, 0.04, 0.25, '#c5cbcf'));
-      faces.push(...makeCuboid(0.85, -0.15, 1.3, 1.5, 0.04, 0.25, '#c5cbcf'));
-
-      // Ailerons on outer wings (2L, 2R)
-      faces.push(...makeCuboid(1.35, -0.06, -3.1, 0.55, 0.05, 0.28, '#b0b7c2'));
-      faces.push(...makeCuboid(1.35, -0.06, 3.1, 0.55, 0.05, 0.28, '#b0b7c2'));
-
-      // Horizontal stabilizer (HTP) - wider, back of fuselage
-      faces.push(...makeCuboid(3.2, -0.8, -1.2, 0.9, 0.07, 1.2, tailColor));
-      faces.push(...makeCuboid(3.2, -0.8, 1.2, 0.9, 0.07, 1.2, tailColor));
-
-      // Elevators (trailing edge of HTP)
-      faces.push(...makeCuboid(3.55, -0.82, -1.4, 0.4, 0.05, 0.3, '#9ea6b1'));
-      faces.push(...makeCuboid(3.55, -0.82, 1.4, 0.4, 0.05, 0.3, '#9ea6b1'));
-
-      // Vertical tail boom (centerline, tall)
-      faces.push(...makeCuboid(3.2, -1.85, 0, 0.85, 1.1, 0.12, tailColor));
-
-      // VTP (vertical tail plane)
-      faces.push(...makeCuboid(3.5, -2.4, 0, 0.5, 0.7, 0.06, '#bfc5cf'));
-
-      // Rudder (trailing edge of VTP)
-      faces.push(...makeCuboid(3.75, -2.65, 0, 0.3, 0.4, 0.04, '#8f96a3'));
+      // Cockpit canopy (front, windscreen blue)
+      faces.push(...makeCuboid(-0.5, 0.1, 0, 0.45, 0.25, 0.3, skyblue));
 
       // Motor section (front, protruding)
-      faces.push(...makeCuboid(-0.3, -1.88, 0, 0.55, 0.28, 0.28, darkMetal));
-      faces.push(...makePrismX(-0.55, -1.88, 0, 0.3, 0.12, 10, '#757d89'));
+      faces.push(...makeCuboid(-1.0, 0, 0, 0.4, 0.14, 0.2, darkMetal));
+      faces.push(...makePrismX(-1.25, 0, 0, 0.25, 0.08, 8, '#6d7684'));
 
-      // Propeller
-      faces.push(...makePrismX(-0.85, -1.88, -0.28, 0.2, 0.08, 12, '#6a7178'));
-      faces.push(...makePrismX(-0.85, -1.88, 0.28, 0.2, 0.08, 12, '#6a7178'));
+      // Propeller (2-blade configuration)
+      faces.push(...makePrismX(-1.5, 0, -0.22, 0.15, 0.06, 10, '#4a4e54'));
+      faces.push(...makePrismX(-1.5, 0, 0.22, 0.15, 0.06, 10, '#4a4e54'));
 
-      // Main landing gear (oleo struts, front + rear)
-      faces.push(...makeCuboid(0.5, -2.4, -0.55, 0.06, 0.65, 0.06, '#6d7684'));
-      faces.push(...makeCuboid(0.5, -2.4, 0.55, 0.06, 0.65, 0.06, '#6d7684'));
-      faces.push(...makeCuboid(1.8, -2.4, -0.48, 0.06, 0.65, 0.06, '#6d7684'));
-      faces.push(...makeCuboid(1.8, -2.4, 0.48, 0.06, 0.65, 0.06, '#6d7684'));
+      // Main wing (high-wing, mounted on top/side of fuselage, extends left-right)
+      // Port (left) wing
+      faces.push(...makeCuboid(1.0, 0.15, -1.6, 1.6, 0.07, 1.3, wingColor));
+      // Starboard (right) wing
+      faces.push(...makeCuboid(1.0, 0.15, 1.6, 1.6, 0.07, 1.3, wingColor));
 
-      // Wheels on struts
-      faces.push(...makeCuboid(0.5, -3.15, -0.55, 0.16, 0.18, 0.5, '#2f333a'));
-      faces.push(...makeCuboid(0.5, -3.15, 0.55, 0.16, 0.18, 0.5, '#2f333a'));
-      faces.push(...makeCuboid(1.8, -3.15, -0.48, 0.16, 0.18, 0.5, '#2f333a'));
-      faces.push(...makeCuboid(1.8, -3.15, 0.48, 0.16, 0.18, 0.5, '#2f333a'));
+      // Wing root fairings (smooth transition from fuselage to wing)
+      faces.push(...makeCuboid(0.95, 0.08, -0.65, 0.8, 0.06, 0.5, '#c5cbcf'));
+      faces.push(...makeCuboid(0.95, 0.08, 0.65, 0.8, 0.06, 0.5, '#c5cbcf'));
 
-      // Wheel hubs
-      faces.push(...makePrismZ(0.5, -3.15, -0.55, 0.15, 0.08, 10, '#a7adb8'));
-      faces.push(...makePrismZ(0.5, -3.15, 0.55, 0.15, 0.08, 10, '#a7adb8'));
-      faces.push(...makePrismZ(1.8, -3.15, -0.48, 0.15, 0.08, 10, '#a7adb8'));
-      faces.push(...makePrismZ(1.8, -3.15, 0.48, 0.15, 0.08, 10, '#a7adb8'));
+      // Ailerons (control surfaces on outer wing trailing edge)
+      faces.push(...makeCuboid(1.25, 0.14, -2.35, 0.35, 0.05, 0.25, '#b0b7c2'));
+      faces.push(...makeCuboid(1.25, 0.14, 2.35, 0.35, 0.05, 0.25, '#b0b7c2'));
 
-      // Servo/control linkage details on wings
-      faces.push(...makeCuboid(0.9, -0.12, -2.6, 0.2, 0.04, 0.16, '#8f96a3'));
-      faces.push(...makeCuboid(0.9, -0.12, 2.6, 0.2, 0.04, 0.16, '#8f96a3'));
+      // Horizontal stabilizer (tail plane, rear, smaller)
+      faces.push(...makeCuboid(3.0, -0.15, -0.85, 0.7, 0.06, 0.85, tailColor));
+      faces.push(...makeCuboid(3.0, -0.15, 0.85, 0.7, 0.06, 0.85, tailColor));
+
+      // Elevators (control surfaces on HTP trailing edge)
+      faces.push(...makeCuboid(3.3, -0.16, -1.05, 0.32, 0.04, 0.25, '#a7adb8'));
+      faces.push(...makeCuboid(3.3, -0.16, 1.05, 0.32, 0.04, 0.25, '#a7adb8'));
+
+      // Vertical tail boom (centered, extends up from rear fuselage)
+      faces.push(...makeCuboid(3.1, -0.3, 0, 0.6, 0.8, 0.1, tailColor));
+
+      // Vertical tail plane (VTP, rudder area)
+      faces.push(...makeCuboid(3.4, -0.9, 0, 0.4, 0.6, 0.05, '#c5cbcf'));
+
+      // Rudder (control surface on VTP)
+      faces.push(...makeCuboid(3.62, -1.1, 0, 0.25, 0.35, 0.04, '#9ea6b1'));
+
+      // Landing gear struts (extend down from fuselage belly)
+      // Front left strut
+      faces.push(...makeCuboid(0.2, -0.25, -0.4, 0.05, 0.5, 0.04, '#5a6268'));
+      // Front right strut
+      faces.push(...makeCuboid(0.2, -0.25, 0.4, 0.05, 0.5, 0.04, '#5a6268'));
+      // Rear left strut
+      faces.push(...makeCuboid(1.6, -0.25, -0.35, 0.05, 0.5, 0.04, '#5a6268'));
+      // Rear right strut
+      faces.push(...makeCuboid(1.6, -0.25, 0.35, 0.05, 0.5, 0.04, '#5a6268'));
+
+      // Wheels (tires at bottom of struts)
+      faces.push(...makeCuboid(0.2, -0.8, -0.4, 0.12, 0.15, 0.4, '#2f333a'));
+      faces.push(...makeCuboid(0.2, -0.8, 0.4, 0.12, 0.15, 0.4, '#2f333a'));
+      faces.push(...makeCuboid(1.6, -0.8, -0.35, 0.12, 0.15, 0.4, '#2f333a'));
+      faces.push(...makeCuboid(1.6, -0.8, 0.35, 0.12, 0.15, 0.4, '#2f333a'));
+
+      // Wheel hubs (center of wheels)
+      faces.push(...makePrismZ(0.2, -0.8, -0.4, 0.12, 0.06, 10, '#8f96a3'));
+      faces.push(...makePrismZ(0.2, -0.8, 0.4, 0.12, 0.06, 10, '#8f96a3'));
+      faces.push(...makePrismZ(1.6, -0.8, -0.35, 0.12, 0.06, 10, '#8f96a3'));
+      faces.push(...makePrismZ(1.6, -0.8, 0.35, 0.12, 0.06, 10, '#8f96a3'));
 
       return faces;
     }
