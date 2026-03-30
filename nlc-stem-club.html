@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -8,13 +8,13 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #f8f5f2;
-      --ink: #1f1a17;
-      --accent: #500000;
-      --muted: #6f6761;
-      --card: #ffffff;
-      --border: #e6ddd6;
-      --tag-bg: #f4ede7;
+      --bg: #121012;
+      --ink: #f1e9e6;
+      --accent: #7a1f1f;
+      --muted: #b7a7a2;
+      --card: #1a1516;
+      --border: #3a2f2f;
+      --tag-bg: #241d1e;
       --cta-h: 42px;
     }
 
@@ -57,7 +57,7 @@
     .btn {
       display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;
       font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-      border: 1px solid var(--border); color: var(--ink); padding: 0.55rem 0.85rem; background: #fff;
+      border: 1px solid var(--border); color: var(--ink); padding: 0.55rem 0.85rem; background: var(--card);
       transition: border-color 0.2s, color 0.2s, transform 0.2s;
     }
     .btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
@@ -72,7 +72,7 @@
     .hero-main, .hero-side { border: 1px solid var(--border); background: var(--bg); padding: 1rem; }
     .eyebrow { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
     h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2rem, 4vw, 3.25rem); line-height: 0.98; margin-bottom: 0.8rem; }
-    .lede { color: #403e39; font-size: 13.2px; max-width: 720px; }
+    .lede { color: var(--muted); font-size: 13.2px; max-width: 720px; }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1rem; }
 
     .reel-wrap { border: 1px solid var(--border); background: #111; aspect-ratio: 16/10; overflow: hidden; position: relative; margin-bottom: 0.8rem; }
@@ -81,7 +81,7 @@
     .reel-label { position: absolute; bottom: 0.55rem; left: 0.55rem; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.92); background: rgba(0,0,0,0.45); padding: 0.2rem 0.45rem; }
 
     .snapshot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-    .snap { background: #fff; padding: 0.75rem; }
+    .snap { background: var(--card); padding: 0.75rem; }
     .snap-head { font-size: 9px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.22rem; }
     .snap-val { font-family: 'DM Serif Display', serif; font-size: 1.25rem; line-height: 1; }
 
@@ -90,36 +90,36 @@
     .section-head::after { content: ''; height: 1px; background: var(--border); flex: 1; }
 
     .now-next-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 1rem; }
-    .now-next-item { background: #fff; padding: 0.8rem 1rem; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); }
+    .now-next-item { background: var(--card); padding: 0.8rem 1rem; font-size: 11px; letter-spacing: 0.06em; color: var(--muted); }
     .now-next-item strong { color: var(--accent); text-transform: uppercase; letter-spacing: 0.09em; font-size: 10px; margin-right: 0.35rem; }
 
     .status-system { display: flex; align-items: center; gap: 0.45rem; padding: 0.8rem 1rem; border: 1px solid var(--border); border-top: none; flex-wrap: wrap; }
     .status-badge { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.25rem 0.6rem; border: 1px solid var(--border); color: var(--muted); background: var(--tag-bg); }
-    .status-badge.active { color: #500000; border-color: #500000; }
+    .status-badge.active { color: var(--accent); border-color: var(--accent); }
     .status-badge.completed { color: var(--muted); }
     .status-badge.testing { color: #7a1f1f; border-color: #7a1f1f; }
 
     .media-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin: 1rem; }
-    .media-tile { background: #fff; aspect-ratio: 4/3; overflow: hidden; position: relative; }
+    .media-tile { background: var(--card); aspect-ratio: 4/3; overflow: hidden; position: relative; }
     .media-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .media-tile .tile-cap { position: absolute; bottom: 0; left: 0; right: 0; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.9); background: linear-gradient(transparent, rgba(0,0,0,0.65)); padding: 0.35rem 0.45rem; }
 
     .results-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); }
-    .result { background: #fff; padding: 1rem; transition: background 0.2s, transform 0.2s; }
+    .result { background: var(--card); padding: 1rem; transition: background 0.2s, transform 0.2s; }
     .result:hover { background: var(--card); transform: translateY(-2px); }
     .result .num { font-family: 'DM Serif Display', serif; font-size: clamp(1.7rem, 2.8vw, 2.35rem); line-height: 1; margin-bottom: 0.25rem; }
     .result .num span { color: var(--accent); }
     .result .label { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
 
     .badge-row { display: flex; gap: 0.45rem; flex-wrap: wrap; padding: 0.8rem 1rem; border-top: 1px solid var(--border); }
-    .badge { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.27rem 0.6rem; border: 1px solid var(--border); background: #fff; color: var(--muted); }
-    .badge.leadership { border-color: #500000; color: #500000; }
+    .badge { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.27rem 0.6rem; border: 1px solid var(--border); background: var(--card); color: var(--muted); }
+    .badge.leadership { border-color: var(--accent); color: var(--accent); }
     .badge.research { border-color: #7a1f1f; color: #7a1f1f; }
     .badge.build { border-color: #5f3131; color: #5f3131; }
     .badge.impact { border-color: var(--accent); color: var(--accent); }
 
     .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
-    .case { background: #fff; padding: 1rem; transition: background 0.2s; }
+    .case { background: var(--card); padding: 1rem; transition: background 0.2s; }
     .case:hover { background: var(--card); }
     .case-title { font-family: 'DM Serif Display', serif; font-size: 1.15rem; margin-bottom: 0.3rem; }
     .case-meta { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.55rem; }
@@ -128,35 +128,35 @@
     details.case-flow summary::-webkit-details-marker { display: none; }
     .flow-body { border-top: 1px solid var(--border); padding: 0.7rem; display: grid; gap: 0.65rem; }
     .flow-block .head { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.25rem; }
-    .flow-block p { font-size: 12px; color: #4a4843; }
+    .flow-block p { font-size: 12px; color: var(--muted); }
 
     .timeline-wrap { padding: 1rem; }
     .growth {
       border: 1px solid var(--border);
-      background: linear-gradient(180deg, #fff, var(--card));
+      background: linear-gradient(180deg, color-mix(in srgb, var(--card) 85%, var(--bg) 15%), var(--card));
       padding: 1rem;
       position: relative;
     }
     .growth-line { height: 2px; background: var(--border); margin: 1rem 0 1.15rem; position: relative; }
-    .growth-line::after { content: ''; position: absolute; left: 0; top: 0; height: 2px; width: 100%; background: linear-gradient(90deg, #c9b7ad, var(--accent)); }
+    .growth-line::after { content: ''; position: absolute; left: 0; top: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--muted), var(--accent)); }
     .growth-points { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .point { border: 1px solid var(--border); background: #fff; padding: 0.8rem; }
+    .point { border: 1px solid var(--border); background: var(--card); padding: 0.8rem; }
     .point .p-head { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
     .point .p-num { font-family: 'DM Serif Display', serif; font-size: 1.9rem; line-height: 1; margin-bottom: 0.25rem; }
-    .point .p-copy { font-size: 12px; color: #4a4843; }
+    .point .p-copy { font-size: 12px; color: var(--muted); }
 
     .quotes { padding: 1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--border); }
-    .quote-card { background: #fff; padding: 1rem; }
-    .quote-text { font-size: 12px; color: #4a4843; line-height: 1.8; margin-bottom: 0.7rem; }
+    .quote-card { background: var(--card); padding: 1rem; }
+    .quote-text { font-size: 12px; color: var(--muted); line-height: 1.8; margin-bottom: 0.7rem; }
     .quote-meta { font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); }
 
     .faq-list { margin: 1rem; margin-top: 0; border: 1px solid var(--border); background: var(--border); display: grid; gap: 1px; }
-    .faq-item { background: #fff; padding: 0.95rem; }
+    .faq-item { background: var(--card); padding: 0.95rem; }
     .faq-q { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
-    .faq-a { font-size: 12px; color: #4a4843; }
+    .faq-a { font-size: 12px; color: var(--muted); }
 
     .docs-list { margin: 1rem; border: 1px solid var(--border); background: var(--border); display: grid; gap: 1px; }
-    .doc-item { background: #fff; padding: 0.85rem 0.95rem; display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+    .doc-item { background: var(--card); padding: 0.85rem 0.95rem; display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
     .doc-name { font-size: 11px; letter-spacing: 0.05em; color: var(--ink); }
     .doc-open { text-decoration: none; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 0.25rem 0.55rem; }
     .doc-open:hover { color: var(--accent); border-color: var(--accent); }
@@ -283,7 +283,7 @@
         <article class="case">
           <p class="case-title">Fixed-Wing Environmental UAV</p>
           <p class="case-meta">Research Initiative · <span class="status-badge completed">Completed</span></p>
-          <p style="font-size:12.5px;color:#4a4843;">Multi-team aerospace build focused on additive manufacturing and environmental sensing.</p>
+          <p style="font-size:12.5px;color:var(--muted);">Multi-team aerospace build focused on additive manufacturing and environmental sensing.</p>
           <details class="case-flow">
             <summary>Challenge · Build · Outcome</summary>
             <div class="flow-body">
@@ -296,7 +296,7 @@
         <article class="case">
           <p class="case-title">Piezoelectric SHM System</p>
           <p class="case-meta">Research Initiative · <span class="status-badge completed">Completed</span></p>
-          <p style="font-size:12.5px;color:#4a4843;">Real-time bridge model monitoring via DAQ and sensor instrumentation.</p>
+          <p style="font-size:12.5px;color:var(--muted);">Real-time bridge model monitoring via DAQ and sensor instrumentation.</p>
           <details class="case-flow">
             <summary>Challenge · Build · Outcome</summary>
             <div class="flow-body">
