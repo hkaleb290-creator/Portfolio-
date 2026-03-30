@@ -1689,7 +1689,7 @@
       // Control state
       let isDragging = false;
       let previousMousePosition = { x: 0, y: 0 };
-      let rotation = { x: 0.3, y: 0.5 };
+      let rotation = { x: Math.PI / 2, y: 0 };
 
       // Load STL files
       const partsList = [
@@ -1785,12 +1785,12 @@
           const center = box.getCenter(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
           
-          // Position camera to frame all parts without transforming them
+          // Position camera to frame plane (with initial rotation applied)
           const fov = camera.fov * (Math.PI / 180);
           let distance = maxDim / 2 / Math.tan(fov / 2);
-          distance *= 1.5;
+          distance *= 1.8;
           
-          camera.position.set(center.x + distance * 0.6, center.y + distance * 0.5, center.z + distance * 0.8);
+          camera.position.set(center.x, center.y + maxDim * 0.3, center.z + distance);
           camera.lookAt(center);
         } catch (e) {
           console.log('Camera setup fallback');
