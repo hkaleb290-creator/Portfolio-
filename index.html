@@ -368,13 +368,44 @@
 
     /* SKILLS MATRIX */
     .skills-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
-    .skill-card { border: 2px solid var(--accent-gold); background: #000; padding: 1.2rem; text-align: center; transition: all 0.2s; }
-    .skill-card:hover { background: rgba(212, 175, 55, 0.08); transform: translateY(-3px); }
+    .skill-card { border: 2px solid var(--accent-gold); background: #000; padding: 1.2rem; text-align: center; transition: all 0.3s ease; opacity: 1; transform: scale(1); animation: fadeInUp 0.5s ease forwards; cursor: pointer; position: relative; }
+    .skill-card:nth-child(1) { animation-delay: 0.05s; }
+    .skill-card:nth-child(2) { animation-delay: 0.1s; }
+    .skill-card:nth-child(3) { animation-delay: 0.15s; }
+    .skill-card:nth-child(4) { animation-delay: 0.2s; }
+    .skill-card:nth-child(5) { animation-delay: 0.25s; }
+    .skill-card:nth-child(6) { animation-delay: 0.3s; }
+    .skill-card:nth-child(7) { animation-delay: 0.35s; }
+    .skill-card:nth-child(8) { animation-delay: 0.4s; }
+    .skill-card:nth-child(9) { animation-delay: 0.45s; }
+    .skill-card:nth-child(10) { animation-delay: 0.5s; }
+    .skill-card:nth-child(11) { animation-delay: 0.55s; }
+    .skill-card:nth-child(12) { animation-delay: 0.6s; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .skill-card.hidden { opacity: 0; transform: scale(0.8); pointer-events: none; max-height: 0; }
+    .skill-card:hover { background: rgba(212, 175, 55, 0.12); transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15); }
+    .skill-card[data-category="Languages"] { border-left: 4px solid #00d4ff; }
+    .skill-card[data-category="Embedded"] { border-left: 4px solid #ff6b9d; }
+    .skill-card[data-category="Robotics"] { border-left: 4px solid #00ff88; }
+    .skill-card[data-category="CAD"] { border-left: 4px solid #ffa500; }
+    .skill-card[data-category="Fabrication"] { border-left: 4px solid #ff00ff; }
+    .skill-card[data-category="Systems"] { border-left: 4px solid #00ffff; }
+    .skill-card[data-category="DevTools"] { border-left: 4px solid #ffff00; }
+    .skill-card[data-category="Web"] { border-left: 4px solid #00ff00; }
+    .skill-card[data-category="Analytics"] { border-left: 4px solid #ff0000; }
+    .skill-card[data-category="Soft Skills"] { border-left: 4px solid #00ccff; }
     .skill-name { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-gold); margin-bottom: 0.6rem; font-weight: bold; }
-    .skill-level { display: flex; gap: 2px; margin-bottom: 0.6rem; }
-    .skill-bar { width: 4px; height: 16px; background: var(--accent-gold); transition: width 0.3s; }
-    .skill-bar.filled { width: 8px; }
-    .skill-category { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.08em; }
+    .skill-level { display: flex; gap: 2px; margin-bottom: 0.6rem; justify-content: center; }
+    .skill-bar { width: 4px; height: 16px; background: var(--accent-gold); transition: width 0.3s; opacity: 0.3; }
+    .skill-bar.filled { width: 8px; opacity: 1; }
+    .skill-category { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .skill-years { font-size: 9px; color: #666; margin-bottom: 0.4rem; }
+    .skill-projects { font-size: 9px; color: var(--accent-gold); margin-top: 0.5rem; word-break: break-word; }
+    .skill-filter-container { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .filter-btn-skill { padding: 0.4rem 0.8rem; background: transparent; border: 1px solid #666; color: #999; cursor: pointer; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.2s; }
+    .filter-btn-skill:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+    .filter-btn-skill.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
+    .filter-btn-skill.all { border-color: var(--accent-gold); color: var(--accent-gold); }
 
     /* TIMELINE */
     .timeline-container { position: relative; padding: 2rem 0; }
@@ -464,7 +495,7 @@
 
   <header id="site-header">
     <a class="logo" href="#">Kaleb Harris</a>
-    <div class="recruitment-mode" style="position: static; opacity: 1;">🎯 RECRUITING MODE ON</div>
+    <div class="recruitment-mode">🎯 RECRUITING MODE ON</div>
     <div class="header-right">
       <nav>
         <a href="#projects">Work</a>
@@ -789,19 +820,32 @@
   <!-- SKILLS MATRIX -->
   <section class="section" id="skills">
     <p class="section-label">Skills &amp; Proficiency</p>
+    <div class="skill-filter-container">
+      <button class="filter-btn-skill all active" data-filter="all">All Skills</button>
+      <button class="filter-btn-skill" data-filter="Languages">Languages</button>
+      <button class="filter-btn-skill" data-filter="Embedded">Embedded</button>
+      <button class="filter-btn-skill" data-filter="Robotics">Robotics</button>
+      <button class="filter-btn-skill" data-filter="CAD">CAD</button>
+      <button class="filter-btn-skill" data-filter="Fabrication">Fabrication</button>
+      <button class="filter-btn-skill" data-filter="Systems">Systems</button>
+      <button class="filter-btn-skill" data-filter="DevTools">DevTools</button>
+      <button class="filter-btn-skill" data-filter="Web">Web</button>
+      <button class="filter-btn-skill" data-filter="Analytics">Analytics</button>
+      <button class="filter-btn-skill" data-filter="Soft Skills">Soft Skills</button>
+    </div>
     <div class="skills-matrix">
-      <div class="skill-card"><div class="skill-name">Python</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">Languages</div></div>
-      <div class="skill-card"><div class="skill-name">C++</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span><span class="skill-bar"></span></div><div class="skill-category">Languages</div></div>
-      <div class="skill-card"><div class="skill-name">Arduino</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Embedded</div></div>
-      <div class="skill-card"><div class="skill-name">ROS</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span><span class="skill-bar"></span></div><div class="skill-category">Robotics</div></div>
-      <div class="skill-card"><div class="skill-name">SolidWorks</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">CAD</div></div>
-      <div class="skill-card"><div class="skill-name">3D Printing</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Fabrication</div></div>
-      <div class="skill-card"><div class="skill-name">Control Systems</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">Systems</div></div>
-      <div class="skill-card"><div class="skill-name">Git/GitHub</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">DevTools</div></div>
-      <div class="skill-card"><div class="skill-name">HTML/CSS</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Web</div></div>
-      <div class="skill-card"><div class="skill-name">JavaScript</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">Web</div></div>
-      <div class="skill-card"><div class="skill-name">Data Analysis</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span><span class="skill-bar"></span></div><div class="skill-category">Analytics</div></div>
-      <div class="skill-card"><div class="skill-name">Leadership</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Soft Skills</div></div>
+      <div class="skill-card" data-category="Languages" data-years="3" data-projects="DIRT Rover, Portfolio"><div class="skill-name">Python</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">Languages</div><div class="skill-years">3+ years</div><div class="skill-projects">🔗 DIRT Rover, Portfolio</div></div>
+      <div class="skill-card" data-category="Languages" data-years="4" data-projects="DIRT Rover, Fixed-Wing UAV"><div class="skill-name">C++</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span><span class="skill-bar"></span></div><div class="skill-category">Languages</div><div class="skill-years">4+ years</div><div class="skill-projects">🔗 DIRT Rover, UAV</div></div>
+      <div class="skill-card" data-category="Embedded" data-years="3" data-projects="DIRT Rover, Fixed-Wing UAV"><div class="skill-name">Arduino</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Embedded</div><div class="skill-years">3+ years</div><div class="skill-projects">🔗 DIRT Rover, UAV</div></div>
+      <div class="skill-card" data-category="Robotics" data-years="2" data-projects="DIRT Rover"><div class="skill-name">ROS</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span><span class="skill-bar"></span></div><div class="skill-category">Robotics</div><div class="skill-years">2+ years</div><div class="skill-projects">🔗 DIRT Rover</div></div>
+      <div class="skill-card" data-category="CAD" data-years="4" data-projects="DIRT Rover, Fixed-Wing UAV"><div class="skill-name">SolidWorks</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">CAD</div><div class="skill-years">4+ years</div><div class="skill-projects">🔗 DIRT Rover, UAV</div></div>
+      <div class="skill-card" data-category="Fabrication" data-years="4" data-projects="DIRT Rover, Fixed-Wing UAV"><div class="skill-name">3D Printing</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Fabrication</div><div class="skill-years">4+ years</div><div class="skill-projects">🔗 DIRT Rover, UAV</div></div>
+      <div class="skill-card" data-category="Systems" data-years="2" data-projects="DIRT Rover"><div class="skill-name">Control Systems</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">Systems</div><div class="skill-years">2+ years</div><div class="skill-projects">🔗 DIRT Rover</div></div>
+      <div class="skill-card" data-category="DevTools" data-years="3" data-projects="All Projects"><div class="skill-name">Git/GitHub</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">DevTools</div><div class="skill-years">3+ years</div><div class="skill-projects">🔗 All Projects</div></div>
+      <div class="skill-card" data-category="Web" data-years="2" data-projects="Portfolio, Zanzibar"><div class="skill-name">HTML/CSS</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Web</div><div class="skill-years">2+ years</div><div class="skill-projects">🔗 Portfolio, Zanzibar</div></div>
+      <div class="skill-card" data-category="Web" data-years="2" data-projects="Portfolio, Zanzibar"><div class="skill-name">JavaScript</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span></div><div class="skill-category">Web</div><div class="skill-years">2+ years</div><div class="skill-projects">🔗 Portfolio, Zanzibar</div></div>
+      <div class="skill-card" data-category="Analytics" data-years="1" data-projects="SHM"><div class="skill-name">Data Analysis</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar"></span><span class="skill-bar"></span></div><div class="skill-category">Analytics</div><div class="skill-years">1+ years</div><div class="skill-projects">🔗 SHM</div></div>
+      <div class="skill-card" data-category="Soft Skills" data-years="2" data-projects="Leadership (All Teams)"><div class="skill-name">Leadership</div><div class="skill-level"><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span><span class="skill-bar filled"></span></div><div class="skill-category">Soft Skills</div><div class="skill-years">2+ years</div><div class="skill-projects">🔗 Team Leadership</div></div>
     </div>
   </section>
 
@@ -2237,6 +2281,34 @@
         if (recruitmentModeIndicator) recruitmentModeIndicator.classList.add('active');
       }
     }
+
+    // SKILL FILTERING
+    const skillFilterButtons = document.querySelectorAll('.filter-btn-skill');
+    const skillCards = document.querySelectorAll('.skill-card');
+
+    skillFilterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        
+        // Update active state
+        skillFilterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Apply filter
+        skillCards.forEach(card => {
+          const category = card.dataset.category;
+          if (filter === 'all' || category === filter) {
+            card.classList.remove('hidden');
+            setTimeout(() => card.style.display = '', 50);
+          } else {
+            card.classList.add('hidden');
+            card.style.display = 'none';
+          }
+        });
+
+        trackEvent(`skill_filter_${filter}`);
+      });
+    });
 
     // PROJECT FILTERING
     const filterButtons = document.querySelectorAll('.filter-btn');
